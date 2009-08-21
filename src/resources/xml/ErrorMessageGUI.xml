@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<panel id="panel" layout="GridBagLayout">
+   <panel>
+       <gridbagconstraints id="gbc1" gridx="0" gridy="0" anchor="GridBagConstraints.CENTER"/>
+       <label id="message" Text="Error Message" Foreground="blue" Font="Helvetica 36"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="0" gridy="1"/>
+       <button id="okay" Text="OKAY" ActionCommand="AC_OKAY"/>
+   </panel>
+
+</panel>

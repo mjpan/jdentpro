@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<panel id="panel" layout="GridBagLayout">
+
+
+<panel>
+ <gridbagconstraints id="gbc" gridx="1" gridy="0" weightx="1" weighty="1" anchor="GridBagConstraints.LINE_START"/>
+ <label Font="Helvetica 36" Foreground="blue" text="Recall"/>
+</panel>
+
+<label LabelFor="recallType" font="Helvetica" foreground="blue" text="Type">
+ <gridbagconstraints id="gbc1" gridx="0" gridy="2" weightx="1" weighty="1" anchor="GridBagConstraints.LINE_END"/>
+</label>
+<combobox id="recallType" PreferredSize="228,22">
+ <gridbagconstraints id="gbc2" gridx="1" gridy="2" weightx="1" weighty="1" anchor="GridBagConstraints.LINE_START"/>
+</combobox> 
+
+<label LabelFor="nextRecall" font="Helvetica" foreground="blue" text="Next Recall Date">
+ <gridbagconstraints use="gbc1" gridx="0" gridy="3"/>
+</label>
+<panel id="nextRecall">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="3"/>
+ <combobox id="Rmonth" editable="false" PreferredSize="72,22"/>
+ <combobox id="Rday" editable="false" PreferredSize="60,22"/>
+ <combobox id="Ryear" editable="false" PreferredSize="80,22"/>
+</panel>
+
+<label LabelFor="lastRecall" font="Helvetica" foreground="blue" text="Last Recall Date">
+ <gridbagconstraints use="gbc1" gridx="0" gridy="4"/>
+</label>
+<panel id="lastRecall">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="4"/>
+ <combobox id="LRmonth" editable="false" PreferredSize="72,22"/>
+ <combobox id="LRday" editable="false" PreferredSize="60,22"/>
+ <combobox id="LRyear" editable="false" PreferredSize="80,22"/>
+</panel>
+
+
+<label LabelFor="recallInterval" font="Helvetica" foreground="blue" text="Interval"> 
+ <gridbagconstraints use="gbc1" gridx="0" gridy="5"/>
+</label>
+<combobox id="recallInterval" PreferredSize="228,22">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="5"/>
+</combobox> 
+
+<panel>
+<gridbagconstraints use="gbc2" gridx="1" gridy="6"/>
+ <button id="save" Text="SAVE" ActionCommand="AC_SAVE"/>
+ <button id="cancel" Text="CANCEL" ActionCommand="AC_CANCEL"/>
+</panel>
+
+
+</panel>

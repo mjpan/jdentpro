@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel id="panel" layout="GridBagLayout">
+   <panel>
+       <gridbagconstraints id="gbc1" gridx="0" gridy="0" anchor="GridBagConstraints.CENTER"/>
+       <label LabelFor="printOptions" Font="Helvetica" Foreground="blue" text="What would you like to print?"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridy="1" anchor="GridBagConstraints.CENTER"/>
+       <button id="bday" Text="Birthday" ActionCommand="AC_BIRTHDAY"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridy="2"/>
+       <button id="recall" Text="Recall" ActionCommand="AC_RECALL_PRINT"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridy="3"/>
+       <button id="main" Text="Return to Main Menu" ActionCommand="AC_MAIN"/>
+   </panel>
+</panel>

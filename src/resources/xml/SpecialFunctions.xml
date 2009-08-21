@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<panel id="panel" layout="GridBagLayout">
+   <panel>
+       <gridbagconstraints id="gbc1" gridx="0" gridy="0" anchor="GridBagConstraints.CENTER"/>
+       <label Text="Special Functions" Foreground="blue" Font="Helvetica 36"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridy="1"/>
+       <button id="manageUsers" Text="Manage Users" ActionCommand="AC_MANAGE"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridy="2"/>
+       <button id="mainMenu" Text="Return to Main Menu" ActionCommand="AC_MAIN"/>
+   </panel>
+</panel>

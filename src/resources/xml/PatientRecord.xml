@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<panel id="panel" layout="GridBagLayout">
+
+
+<panel>
+ <gridbagconstraints id="gbc" gridx="2" gridy="0" weightx="1" weighty="1" anchor="GridBagConstraints.CENTER"/>
+ <label Font="Helvetica 36" Foreground="blue" text="Patient Record"/>
+</panel>
+
+
+<label LabelFor="RCN" font="Helvetica" foreground="blue" text="RCN">
+ <gridbagconstraints id="gbc1" gridx="1" gridy="2" weightx="1" weighty="1" anchor="GridBagConstraints.LINE_END" insets="(0,5,5,0)"/>
+</label>
+<textfield id="RCN" Columns="18" editable="false">
+ <gridbagconstraints id="gbc2" gridx="2" gridy="2" weightx="1" weighty="1" anchor="GridBagConstraints.LINE_START"/>
+</textfield> 
+
+<label LabelFor="Address" font="Helvetica" foreground="blue" text="Address">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="2"/>
+</label>
+<textfield id="Address" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="2"/>
+</textfield>
+
+<label LabelFor="LastName" font="Helvetica" foreground="blue" text="Last Name">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="3"/>
+</label>
+<textfield id="LastName" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="3"/>
+</textfield>
+
+
+<label LabelFor="Line2" font="Helvetica" foreground="blue" text="Line 2">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="3"/>
+</label>
+<textfield id="Line2" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="3"/>
+</textfield>
+
+<label LabelFor="FirstName" font="Helvetica" foreground="blue" text="First Name">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="4"/>
+</label>
+<textfield id="FirstName" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="4"/>
+</textfield>
+
+<label LabelFor="city" font="Helvetica" foreground="blue" text="City">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="4"/>
+</label>
+<textfield id="city" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="4"/>
+</textfield>
+
+<label LabelFor="MiddleName" font="Helvetica" foreground="blue" text="Middle Name">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="5"/>
+</label>
+<textfield id="MiddleName" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="5"/>
+</textfield>
+
+<label LabelFor="state" font="Helvetica" foreground="blue" text="State">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="5"/>
+</label>
+<textfield id="state" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="5"/>
+</textfield>
+
+<label LabelFor="title" font="Helvetica" foreground="blue" text="Title">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="6"/>
+</label>
+<textfield id="title" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="6"/>
+</textfield>
+
+<label LabelFor="ZipCode" font="Helvetica" foreground="blue" text="Zip Code">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="6"/>
+</label>
+<textfield id="ZipCode" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="6"/>
+</textfield>
+
+<label LabelFor="nickname" font="Helvetica" foreground="blue" text="Nickname">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="7"/>
+</label>
+<textfield id="nickname" Columns="18">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="7"/>
+</textfield>
+
+<label LabelFor="homePhone" font="Helvetica" foreground="blue" text="Home Phone">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="7"/>
+</label>
+<textfield id="homePhone" Columns="18" Text="(###)###-####">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="7"/>
+</textfield>
+
+
+
+<label LabelFor="birthday" font="Helvetica" foreground="blue" text="Birthday">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="8"/>
+</label>
+<panel id="birthday">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="8"/>
+ <combobox id="month" editable="false" PreferredSize="72,22"/>
+ <combobox id="day" editable="false" PreferredSize="60,22"/>
+ <combobox id="year" editable="false" PreferredSize="80,22"/>
+</panel>
+
+<panel>
+ <gridbagconstraints use="gbc2" gridx="2" gridy="8"/>
+ <button id="guarantor" Text="GUAR." ActionCommand="AC_GUARANTOR"/>
+ <textfield id="guarName" editable="false" columns="11"/>
+</panel>
+
+<label LabelFor="SSN" font="Helvetica" foreground="blue" text="Social Security #">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="9"/>
+</label>
+<textfield id="SSN" Columns="18" Text="###-##-####">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="9"/>
+</textfield>
+
+<label LabelFor="wkPhone" font="Helvetica" foreground="blue" text="Work Phone">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="9"/>
+</label>
+<textfield id="wkPhone" Columns="18" Text="(###)###-####">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="9"/>
+</textfield>
+
+<label LabelFor="mobilePhone" font="Helvetica" foreground="blue" text="Cell Phone">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="10"/>
+</label>
+<textfield id="mobilePhone" Columns="18" Text="(###)###-####">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="10"/>
+</textfield>
+
+<label LabelFor="Sex" font="Helvetica" foreground="blue" text="Sex"> 
+ <gridbagconstraints use="gbc1" gridx="3" gridy="10"/>
+</label>
+<combobox id="Sex" editable="false" PreferredSize="228,22">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="10"/>
+</combobox> 
+
+  <panel>
+    <gridbagconstraints use="gbc1" gridx="2" gridy="11" anchor="GridBagConstraints.LINE_START"/>
+    <checkbox id="active" Selected="true"/>
+    <label LabelFor="active" font="Helvetic" foreground="blue" text="Active Patient"/>
+  </panel>
+
+  <panel>
+    <gridbagconstraints use="gbc1" gridx="4" gridy="11" anchor="GridBagConstraints.LINE_START"/>
+    <button id="recall" Text="RECALL" ActionCommand="AC_RECALL"/>
+  </panel>
+
+  <panel>
+    <gridbagconstraints use="gbc1" gridx="2" gridy="13" gridwidth="2" anchor="GridBagConstraints.CENTER"/>
+    <button id="cancel" Text="CANCEL" ActionCommand="AC_CANCEL"/>
+    <button id="save" Text="SAVE" ActionCommand="AC_SAVE"/>
+  </panel>
+
+
+</panel>

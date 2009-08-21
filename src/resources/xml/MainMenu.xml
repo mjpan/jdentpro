@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<panel id="panel" layout="GridBagLayout">
+   <panel>
+       <gridbagconstraints id="gbc1" gridx="0" gridy="0" weightx="0.5" weighty="0.5" anchor="GridBagConstraints.CENTER"/>
+       <label Text="Main Menu" Foreground="blue" Font="Helvetica 36"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="0" gridy="1"/>
+       <button id="patientInfo" Text="Patient Information" ActionCommand="AC_PATIENT"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="1" gridy="1"/>
+       <button Text="Office Functions"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="0" gridy="2"/>
+       <button Text="Charges/Payments"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="1" gridy="2"/>
+       <button id="printOptions" Text="Report Printing" ActionCommand="AC_PRINTING"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="0" gridy="3"/>
+       <button Text="Appointment Book"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="1" gridy="3"/>
+       <button id="specialFunctions" Text="Special Functions" ActionCommand="AC_SPECIAL"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="0" gridy="4"/>
+       <button Text="Print Insurance"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="1" gridy="4"/>
+       <button id="loginScreen" Text="Log Out" ActionCommand="AC_LOGOUT"/>
+   </panel>
+   <panel>
+       <gridbagconstraints use="gbc1" gridx="1" gridy="5"/>
+       <button id="quit" Text="QUIT jDENTPRO" ActionCommand="AC_QUIT"/>
+   </panel>
+</panel>

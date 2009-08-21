@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel id="panel" layout="GridBagLayout">
+
+
+<panel>
+ <gridbagconstraints id="gbc" gridx="1" gridy="0" weightx="0.2" weighty="0.2" anchor="GridBagConstraints.LINE_START"/>
+ <label Font="Helvetica 36" Foreground="blue" text="Print Recall"/>
+</panel>
+
+
+
+<label LabelFor="startDate" font="Helvetica" foreground="blue" text="From">
+ <gridbagconstraints id="gbc1" gridx="0" gridy="1" weightx="0.2" weighty="0.2" anchor="GridBagConstraints.LINE_END"/>
+</label>
+<panel id="startDate">
+ <gridbagconstraints id="gbc2" gridx="1" gridy="1" weightx="0.2" weighty="0.2" anchor="GridBagConstraints.LINE_START"/>
+ <combobox id="Smonth" editable="false" PreferredSize="72,22"/>
+ <combobox id="Sday" editable="false" PreferredSize="60,22"/>
+ <combobox id="Syear" editable="false" PreferredSize="80,22"/>
+</panel>
+
+<label LabelFor="endDate" font="Helvetica" foreground="blue" text="To">
+ <gridbagconstraints use="gbc1" gridx="0" gridy="2"/>
+</label>
+<panel id="endDate">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="2"/>
+ <combobox id="Emonth" editable="false" PreferredSize="72,22"/>
+ <combobox id="Eday" editable="false" PreferredSize="60,22"/>
+ <combobox id="Eyear" editable="false" PreferredSize="80,22"/>
+</panel>
+
+
+<label LabelFor="missing" font="Helvetica" foreground="blue" text="# of Labels Missing"> 
+ <gridbagconstraints use="gbc1" gridx="0" gridy="3"/>
+</label>
+<combobox id="missing" PreferredSize="225,22">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="3"/>
+</combobox> 
+
+<label LabelFor="fileChooser
+" font="Helvetica" foreground="blue" text="Save Documents in...">
+ <gridbagconstraints use="gbc1" gridx="0" gridy="4"/>
+</label>
+<panel id="fileChooser">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="4"/>
+ <textfield id="filePath" editable="false" Columns="20"/>
+ <button id="choose" Text="Choose..." ActionCommand="AC_CHOOSE"/>
+</panel>
+
+<panel id="buttons">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="5"/>
+ <button id="create" Text="CREATE DOCUMENTS" ActionCommand="AC_RECALL_CREATE"/>
+ <button id="cancel" Text="CANCEL" ActionCommand="AC_CANCEL"/>
+</panel>
+
+
+
+</panel>
