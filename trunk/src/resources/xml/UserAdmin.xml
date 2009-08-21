@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<panel id="accountPanel" layout="GridBagLayout">
+
+<label id="titleLabel" Text="Edit User" Foreground="blue" Font="Helvetica 36">
+ <gridbagconstraints id="gbc" gridx="1" weightx="0.1" weighty="0.1" anchor="GridBagConstraints.LINE_START"/>
+</label>
+
+<label LabelFor="userField" Font="Helvetica" Foreground="blue" Text="User">
+ <gridbagconstraints id="gbc1" gridx="0" gridy="1" weightx="0.1" anchor="GridBagConstraints.LINE_END"/>
+</label>
+<textfield id="userField" Columns="18" editable="false">
+ <gridbagconstraints id="gbc2" gridx="1" gridy="1" weighty="0.1" anchor="GridBagConstraints.LINE_START"/>
+</textfield>
+
+<label LabelFor="passwordField" Font="Helvetica" Foreground="blue" Text="Password">
+ <gridbagconstraints use="gbc1" gridy="2"/>
+</label>
+<passwordfield id="passwordField" Columns="18">
+ <gridbagconstraints use="gbc2" gridy="2"/>
+</passwordfield>
+
+<label LabelFor="confirmPasswordField" Font="Helvetica" Foreground="blue" Text="Confirm Password">
+ <gridbagconstraints use="gbc1" gridy="3"/>
+</label>
+<passwordfield id="confirmPasswordField" Columns="18">
+ <gridbagconstraints use="gbc2" gridy="3"/>
+</passwordfield>
+
+<label LabelFor="accessLevel" Font="Helvetica" Foreground="blue" Text="Access Level">
+ <gridbagconstraints use="gbc1" gridy="4"/>
+</label>
+<combobox id="accessLevel" PreferredSize="225,22">
+ <gridbagconstraints use="gbc2" gridy="4"/>
+</combobox>
+
+<panel>
+ <gridbagconstraints use="gbc" gridy="5"/>
+ <button id="saveButton" Text="SAVE" ActionCommand="AC_SAVE"/>
+ <button id="cancelButton" Text="CANCEL" ActionCommand="AC_CANCEL"/> 
+</panel>
+
+
+
+</panel>
