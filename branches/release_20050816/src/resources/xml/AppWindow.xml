@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<frame size="900,600" >
+
+<menubar id="menubar">
+
+<menu id="menuFile" text="Application"  mnemonic="A">
+   <menuitem id="mi_Options" text="Options..." enabled="false" ActionCommand="AC_Options"/>
+   <menuitem id="mi_Help" text="JDentPro Help" enabled="false"  ActionCommand="AC_Help" Accelerator="acc_Help"/>
+   <separator/>
+   <menuitem id="mi_About" text="About" enabled="true"  ActionCommand="AC_About" Accelerator="acc_About" macos_about="true"/>
+
+   <separator/>
+<menuitem id="mi_Exit" text="Exit"  ActionCommand="AC_Exit" Accelerator="acc_Exit" macos_quit="true"/>
+</menu>
+
+
+</menubar>
+
+
+   <panel />
+
+
+</frame>
+
+

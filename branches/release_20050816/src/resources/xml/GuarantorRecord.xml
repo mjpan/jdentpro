@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<panel id="panel" layout="GridBagLayout">
+
+<panel>
+ <gridbagconstraints id="gbc" gridx="2" gridy="0" weightx="0.1" weighty="0.1" anchor="GridBagConstraints.CENTER"/>
+ <label Font="Helvetica 36" Foreground="blue" text="Guarantor Record"/>
+</panel>
+
+<button id="change" Text="Change to Different Guarantor" ActionCommand="AC_CHANGE">
+ <gridbagconstraints use="gbc" gridx="3" gridy="0"/>
+</button>
+
+<button id="self" Text="Set self as Guarantor" ActionCommand="AC_CHANGE_TO_SELF">
+ <gridbagconstraints use="gbc" gridx="3" gridy="1"/>
+</button>
+
+<label LabelFor="RCN" font="Helvetica" foreground="blue" text="ID">
+ <gridbagconstraints id="gbc1" gridx="1" gridy="2" weightx="0.1" weighty="0.1" anchor="GridBagConstraints.LINE_END"/>
+</label>
+<textfield id="RCN" Columns="20" editable="false">
+ <gridbagconstraints id="gbc2" gridx="2" gridy="2" weightx="0.1" weighty="0.1" anchor="GridBagConstraints.LINE_START"/>
+</textfield> 
+
+<label LabelFor="Address" font="Helvetica" foreground="blue" text="Address">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="2"/>
+</label>
+<textfield id="Address" Columns="20">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="2"/>
+</textfield>
+
+<label LabelFor="LastName" font="Helvetica" foreground="blue" text="Last Name">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="3"/>
+</label>
+<textfield id="LastName" Columns="20">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="3"/>
+</textfield>
+
+<label LabelFor="City" font="Helvetica" foreground="blue" text="City">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="3"/>
+</label>
+<textfield id="City" Columns="20">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="3"/>
+</textfield>
+
+<label LabelFor="State" font="Helvetica" foreground="blue" text="State">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="4"/>
+</label>
+<textfield id="State" Columns="20">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="4"/>
+</textfield>
+
+<label LabelFor="FirstName" font="Helvetica" foreground="blue" text="First Name">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="4"/>
+</label>
+<textfield id="FirstName" Columns="20">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="4"/>
+</textfield>
+
+<label LabelFor="ZipCode" font="Helvetica" foreground="blue" text="Zip Code">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="5"/>
+</label>
+<textfield id="ZipCode" Columns="20">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="5"/>
+</textfield>
+
+<label LabelFor="Sex" font="Helvetica" foreground="blue" text="Sex"> 
+ <gridbagconstraints use="gbc1" gridx="1" gridy="5"/>
+</label>
+<combobox id="Sex" editable="false" PreferredSize="252,22">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="5"/>
+</combobox> 
+
+
+<label LabelFor="Telephone" font="Helvetica" foreground="blue" text="Telephone">
+ <gridbagconstraints use="gbc1" gridx="3" gridy="6"/>
+</label>
+<textfield id="Telephone" Columns="20" Text="(###)###-####">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="6"/>
+</textfield>
+
+<label LabelFor="SSN" font="Helvetica" foreground="blue" text="Social Security #">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="6"/>
+</label>
+<textfield id="SSN" Columns="20" Text="###-##-####">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="6"/>
+</textfield>
+
+
+<label LabelFor="birthday" font="Helvetica" foreground="blue" text="Birthday">
+ <gridbagconstraints use="gbc1" gridx="1" gridy="7"/>
+</label>
+<panel id="birthday">
+ <gridbagconstraints use="gbc2" gridx="2" gridy="7"/>
+ <combobox id="month" editable="false" PreferredSize="72,22"/>
+ <combobox id="day" editable="false" PreferredSize="60,22"/>
+ <combobox id="year" editable="false" PreferredSize="80,22"/>
+</panel>
+
+<button id="updateFamily" Text="UPDATE FAMILY" ActionCommand="AC_UPDATE_FAM">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="7"/>
+</button>
+
+<button id="recall" Text="RECALL" ActionCommand="AC_RECALL">
+ <gridbagconstraints use="gbc2" gridx="4" gridy="8"/>
+</button>
+
+<panel>
+ <gridbagconstraints use="gbc2" gridx="2" gridy="8"/>
+ <button id="save" Text="SAVE" ActionCommand="AC_SAVE"/>
+ <button id="cancel" Text="CANCEL" ActionCommand="AC_CANCEL"/>
+</panel>
+
+
+
+</panel>

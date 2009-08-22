@@ -1,0 +1,243 @@
+<?xml version="1.0"?>
+
+<project name="jDentPro" default="usage" basedir=".">
+
+  <!-- =================================================================== -->
+  <!-- Initialization target                                               -->
+  <!-- =================================================================== -->
+  <target name="init">
+    <tstamp/>
+    <property name="Project" value="jDentPro"/>
+    <property name="version" value="0.1"/>
+    <property name="year" value="2005"/>
+
+    <echo message="---------------- ${Project} ${version} [${year}] -------------"/>
+
+    <property name="src.dir" value="./src"/>
+    <property name="lib.dir" value="./lib"/>
+    <property name="resource.dir" value="${src.dir}/resources"/>
+    <property name="xml.dir" value="${resource.dir}/xml"/>
+
+    <!-- this is for junit testing -->
+    <property name="junit.jar" value="${lib.dir}/junit.jar"/>
+
+    <!-- logging-->	
+    <property name="log4j.jar" value="${lib.dir}/log4j-1.2.8.jar"/>
+
+    <!-- added for XUL-->	
+    <property name="xul.jar" value="${lib.dir}/swixml.jar"/>
+
+    <!-- added for JDOM (also needed by swixml) -->	
+    <property name="jdom.jar" value="${lib.dir}/jdom.jar"/>
+
+    <!-- added for MySQL -->	
+    <property name="mysql.jar" value="${lib.dir}/mysql-connector-java-3.1.8-bin.jar"/>
+
+    <!-- added for iText -->	
+    <property name="itext.jar" value="${lib.dir}/itext-1.3.jar"/>
+
+    <!-- classpath defined here -->
+	<property name="classpath" value="${jdom.jar}:${log4j.jar}:${xul.jar}:${mysql.jar}:${junit.jar}:${itext.jar}" />
+
+    <property name="build.dir" value="./build"/>
+    <property name="build.dest" value="./build/classes"/>
+    <property name="build.compiler" value="modern"/>
+
+    <!-- Additional variables needed -->
+    <property name="src.tar" value="${build.dir}/src.${DSTAMP}.tar"/>
+    <property name="src.gz" value="${src.tar}.gz"/>
+
+    <!-- added for application class -->
+    <property name="application.class" value="com/winningsmiledental/JDentPro"/>
+
+
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Help on usage                                                       -->
+  <!-- =================================================================== -->
+  <target name="usage" depends="init"  >
+    <echo message=""/>
+    <echo message="${Project} Ant build file"/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message="Available targets are:"/>
+    <echo message="   package   --> generates the ${Project}.jar file"/>
+    <echo message="   compile   --> compiles the source code"/>
+    <echo message="   clean     --> cleans up the build directory"/>
+    <echo message="   run       --> runs ${Project} from compiled source"/>
+    <echo message="   usage     --> show this message (default)"/>
+    <echo message=" See the comments inside the build.xml file for more details."/>
+    <echo message="-------------------------------------------------------------"/>
+    <echo message=""/>
+    <echo message=""/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Clean targets                                                       -->
+  <!-- =================================================================== -->
+  <target name="clean" depends="init">
+    <delete >
+        <fileset dir="${build.dest}" excludes="**/image/*"/>
+    </delete>
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Prepares the build directory                                        -->
+  <!-- =================================================================== -->
+  <target name="prepare" depends="init">
+    <!-- create directories -->
+    <echo message="Preparing the build directories"/>
+    <mkdir dir="${build.dir}"/>
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Compiles the source directory                                       -->
+  <!-- =================================================================== -->
+
+  <target name="compile" depends="prepare">
+    <echo message="Compiling the sources using ${build.compiler}"/>
+    <!-- create directories -->
+    <mkdir dir="${build.dest}"/>
+
+    <copy todir="${build.dest}">
+        <fileset dir="${resource.dir}"/>
+    </copy>
+
+    <tstamp>
+      <format property="TIMESTAMP" pattern="yyyyMMddhhmm" locale="en"/>
+    </tstamp>
+
+    <echo file="${build.dest}/TIMESTAMP" append="false">${TIMESTAMP}</echo>
+
+    <!-- compile the sources -->
+
+    <javac srcdir="${src.dir}"
+           destdir="${build.dest}"
+           includes="**/*.java"
+	   excludes="MacOSX/**"
+           classpath="${classpath}"
+           debug="true"
+           verbose="false"
+           optimize="true"
+           deprecation="true" />
+
+  </target>
+
+  <target name="compileMacOSX" depends="prepare,compile">
+    <echo message="Compiling the sources using ${build.compiler}"/>
+    <!-- create directories -->
+    <mkdir dir="${build.dest}"/>
+
+    <!-- compile the sources -->
+    <javac srcdir="${src.dir}/MacOSX"
+           destdir="${build.dest}"
+           includes="**/*.java"
+           classpath="${classpath}"
+           debug="true"
+           verbose="false"
+           optimize="true"
+           deprecation="true" />
+
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates both the binary and source packages -->
+  <!-- =================================================================== -->
+  <target name="package" depends="externalRelease">
+
+    <echo message="Creating the source tar file"/>
+
+    <tar tarfile="${src.tar}"
+         basedir="."
+         excludes="**/build/**, **/CVS, **/*tmp" />
+
+    <echo message="Creating the source gzip file"/>
+    <gzip src="${src.tar}" destfile="${src.gz}"/>
+
+    <echo message="Removing the source tar file"/>
+    <delete file="${src.tar}"/>
+
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Creates binary package -->
+  <!-- =================================================================== -->
+
+  <!-- this is for external release
+       does not package the external libraries
+       relieves us from various restrictions in their licenses -->
+  <target name="externalRelease" depends="compile">
+      <echo message="Creating the jar file ${build.dir}/${Project}.jar for external release"/>
+
+      <jar jarfile="${build.dir}/${Project}.jar"
+           basedir="${build.dest}"
+      >
+
+	<zipfileset src="${xul.jar}"/>
+	<zipfileset src="${log4j.jar}"/>
+	<zipfileset src="${jdom.jar}"/>
+	<zipfileset src="${mysql.jar}"/>
+	<zipfileset src="${junit.jar}"/>
+	<zipfileset src="${itext.jar}"/>
+
+	<manifest>
+	  <attribute name="Main-Class" value="${application.class}"/>
+	</manifest>
+      </jar>
+
+
+  </target>
+
+
+  <!-- this is for external release
+       does not package the external libraries
+       relieves us from various restrictions in their licenses -->
+  <target name="packageMacOSX" depends="compileMacOSX">
+      <echo message="Creating the jar file ${build.dir}/${Project}.jar for external release"/>
+
+      <jar jarfile="${build.dir}/${Project}.jar"
+           basedir="${build.dest}"
+      >
+
+	<zipfileset src="${xul.jar}"/>
+	<zipfileset src="${log4j.jar}"/>
+	<zipfileset src="${jdom.jar}"/>
+	<zipfileset src="${mysql.jar}"/>
+	<zipfileset src="${junit.jar}"/>
+	<zipfileset src="${itext.jar}"/>
+
+	<manifest>
+	  <attribute name="Main-Class" value="${application.class}"/>
+	</manifest>
+      </jar>
+
+
+  </target>
+
+
+
+  <!-- =================================================================== -->
+  <!-- Run project from compiled sources                                  -->
+  <!-- =================================================================== -->
+  <target name="run" depends="externalRelease">
+    <echo message="--- Executing ${Project} ---"/>
+    <java classname="com.winningsmiledental.JDentPro"
+          fork="yes"
+          classpath="${build.dir}/${Project}.jar:${classpath}">
+    </java>
+  </target>
+
+
+
+
+</project>
+
+
+
+
+
+
+
+

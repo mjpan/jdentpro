@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<panel id="panel" layout="GridBagLayout">
+
+  <label LabelFor="jDentPro" Font="Helvetica 72" Foreground="blue" text="jDentPro">
+    <gridbagconstraints id="gbc1" gridx="1" gridy="0" weightx="0.2" weighty="0.2" anchor="GridBagConstraints.LINE_START"/>
+  </label> 
+
+
+  <label LabelFor="userField" Font="Helvetica" Foreground="blue" text="Login">
+    <gridbagconstraints use="gbc1" gridx="0" gridy="1" anchor="GridBagConstraints.LINE_END"/>
+  </label>
+  <textfield id="userField" editable="true" Columns="21">
+    <gridbagconstraints id="gbc2" use="gbc1" gridx="1" gridy="1" anchor="GridBagConstraints.LINE_START" insets="(0,5,0,0)"/>
+  </textfield>
+
+  <label LabelFor="passwordField" Font="Helvetica" Foreground="blue" text="Password">
+   <gridbagconstraints use="gbc1" gridx="0" gridy="2" anchor="GridBagConstraints.LINE_END"/>
+  </label>
+  <passwordfield id="passwordField" Columns="21" Text="">
+   <gridbagconstraints use="gbc2" gridx="1" gridy="2"/>
+  </passwordfield>
+
+  <label LabelFor="database" Font="Helvetica" Foreground="blue" text="Database">
+    <gridbagconstraints use="gbc1" gridx="0" gridy="3" anchor="GridBagConstraints.LINE_END"/>
+  </label>
+  <combobox id="database" editable="true" PreferredSize="252,22">
+    <gridbagconstraints  use="gbc2" gridx="1" gridy="3"/>
+  </combobox>
+
+  <panel>
+    <gridbagconstraints use="gbc1" gridx="1" gridy="4" gridwidth="2" anchor="GridBagConstraints.LINE_START"/>
+    <button id="login" Text="LOGIN" ActionCommand="AC_LOGIN"/>
+    <button id="quit" Text="QUIT" ActionCommand="AC_QUIT"/>
+  </panel>
+</panel>

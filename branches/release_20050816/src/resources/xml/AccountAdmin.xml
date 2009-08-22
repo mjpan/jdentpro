@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog id="dialog" size="400,200" Title="Account administration module">
+  <panel id="accountPanel" constraints="BorderLayout.CENTER" Layout="GridLayout(6,2)" >
+    <label LabelFor="userField" Font="Helvetica" Foreground="blue" text="Login"/>
+    <textfield id="userField" Columns="30" Text=""/>
+
+    <label LabelFor="passwordField" Font="Helvetica" Foreground="blue" text="Password"/>
+    <passwordfield id="passwordField" Columns="30" Text=""/>
+
+    <label LabelFor="passwordConfirmField" Font="Helvetica" Foreground="blue" text="Confirm password"/>
+    <passwordfield id="passwordConfirmField" Columns="30" Text=""/>
+
+    <label LabelFor="priority" Font="Helvetica" Foreground="blue" text="Priority level"/>
+    <textfield id="priority" Columns="30" Text=""/>
+
+    <label LabelFor="groups" Font="Helvetica" Foreground="blue" text="Groups"/>
+    <textfield id="groups" Columns="30" Text=""/>
+
+    <button Text="OK" ActionCommand="AC_OK"/>
+    <button Text="CANCEL" ActionCommand="AC_CANCEL"/>
+  </panel>
+
+
+</dialog>
+
+

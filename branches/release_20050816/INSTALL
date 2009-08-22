@@ -1,0 +1,34 @@
+The following should be in the root of the source
+* MacOSX/
+  [a directory containing files to package the application for Mac OS X]
+* build.xml
+  [Apache Ant build script]
+* lib/
+  [necessary library files]
+* scripts/
+  [utility scripts]
+* src/
+  [Source code]
+
+To build the generic jar:
+* ant package
+  [generic build, the resulting jar file will be in build/ ]
+
+To build the Mac OS X application bundle
+* first build the Mac specific jar, using the build target "packageMacOSX"
+* run Jar Bundler application (q!open -a "Jar\ Bundler")
+  * under "Build information"
+    * set "com.winningsmiledental.JDentPro" as the main class
+    * select MacOSX/jDentPro.icns
+    * Ensure "Use Macintosh Menu Bar" is checked
+    * set JVM version to 1.6+
+  * under "Classpath and Files"
+    * add build/jDentPro.jar into "Additional Files"
+  * under "Properties"
+    * set "jDentPro" as the Bundle Name
+    * set version number
+  * create the application
+* Once the application buindle has been built, copy the bundle to /Applications
+
+
+Upcoming: automated installation of this package
