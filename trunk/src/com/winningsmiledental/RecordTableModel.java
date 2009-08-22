@@ -46,6 +46,7 @@ public abstract class RecordTableModel extends JDentProTableModel {
 	}
 
 	try {
+	    int i =0;
 	    while (getResultSet().next()) {
 		/*
 		String name = resultSet.getString(1) + ", " + 
@@ -56,10 +57,12 @@ public abstract class RecordTableModel extends JDentProTableModel {
 		addRow(name, address, phone, rcn);
 		*/
 		addRow(resultSet);
+		i++;
 	    }
+	    //System.out.println("refreshed and added "+i+" records");
 	}
 	catch (SQLException e) {
-
+	    e.printStackTrace();
 	}
     }
 

@@ -29,6 +29,10 @@ public class PrintBDayListener extends AbstractListener {
 
     public PrintBDayListener(GUI gui) {
 	super(gui);
+	resetArrays();
+    }
+
+    private void resetArrays() {
 	pdfLabels = new ArrayList();
 	pdfListRCN = new ArrayList();
 	pdfListName = new ArrayList();
@@ -41,7 +45,8 @@ public class PrintBDayListener extends AbstractListener {
     public void actionPerformed (ActionEvent ae) {
         String command = ae.getActionCommand();
 	PrintBDayGUI temp = (PrintBDayGUI)gui;
-	RecordManager manager = ((PrintBDayGUI)gui).getRecordManager();
+
+	//RecordManager manager = ((PrintBDayGUI)gui).getRecordManager();
 	if (command.equals("AC_CANCEL")) {
 	    ((JDentProExecutioner)getExecutioner()).loadPrintOptions();
 	}
@@ -64,8 +69,11 @@ public class PrintBDayListener extends AbstractListener {
 		    new ErrorMessage("Please Choose File to Save PDFs in.");
 		}
 		else {
+		    resetArrays();
+
 		    String month = temp.getMonth();
-		    ResultSet rs = manager.getRecordsWithBirthdateInMonth(month);
+		    ResultSet rs = 
+			getExecutioner().getPatientRecordManager().getRecordsWithBirthdateInMonth(month);
 		    while (rs.next()) {
 			String rcn = rs.getString(1) + "\n\n" + rs.getInt(13);
 			String lname = rs.getString(2);

@@ -26,30 +26,35 @@ public class GuarantorInfoListener extends AbstractListener {
     public void actionPerformed(ActionEvent ae){
         String command = ae.getActionCommand();
 
-	RecordManager manager = ((GuarantorInfoGUI)gui).getRecordManager();
+
 	int ptRCN = ((GuarantorInfoGUI)gui).getPatientRCN();
 	if (command.equals("AC_CANCEL")) {
-	    getExecutioner().loadPatientRecord(manager, ptRCN);
+	    getExecutioner().loadPatientRecord(ptRCN);
         } 
 	else if (command.equals("AC_NEW")) {
-	    getExecutioner().loadGuarantorRecord(ptRCN, manager);
+	    getExecutioner().loadGuarantorRecord(ptRCN);
 	}
 	else if (command.equals("AC_EDIT")) {
-	    System.out.println("attempting command >> edit");
+	    //System.out.println("attempting command >> edit");
 	    JTable table = ((GuarantorInfoGUI)gui).getTable();
 	    int row = table.getSelectedRow();
 	    if (row >= 0) {
+		int gPatNum = -1;
 		try {
-		    int gPatNum = ((Integer)table.getValueAt(row, 3)).intValue();
-		    getExecutioner().loadGuarantorRecord(ptRCN, manager, gPatNum);
+		    gPatNum = ((Integer)table.getValueAt(row, 3)).intValue();
+		    getExecutioner().loadGuarantorRecord(ptRCN, gPatNum);
 		}
 		catch (Exception e) {
 		    e.printStackTrace();
+
+		    System.out.println("loading guarantor "+gPatNum+
+				       " for patient "+ptRCN+" failed");
 		}
 	    }
+	}
+	else if (command.equals("AC_SEEK")) {
+	    ((GuarantorInfoGUI)gui).refreshTable();
 	}	   
-
-	
     }
     
    

@@ -110,6 +110,7 @@
  <gridbagconstraints use="gbc2" gridx="2" gridy="8"/>
  <button id="guarantor" Text="GUAR." ActionCommand="AC_GUARANTOR"/>
  <textfield id="guarName" editable="false" columns="11"/>
+ <button id="self" Text="Set self as Guarantor" ActionCommand="AC_SET_TO_SELF" />
 </panel>
 
 <label LabelFor="SSN" font="Helvetica" foreground="blue" text="Social Security #">

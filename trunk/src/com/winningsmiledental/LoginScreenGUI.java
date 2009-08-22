@@ -49,7 +49,8 @@ public class LoginScreenGUI extends AbstractGUI {
     }
 
     public void setUserAccountManager(String database) {
-	accountManager = UserAccountManagerFactory.getUserAccountManager(database);
+	accountManager = UserAccountManagerFactory.getUserAccountManager
+	    (database);
     }
 
     public String getUserName() {

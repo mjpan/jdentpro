@@ -102,7 +102,8 @@ public class JDentProFrame implements ApplicationFrame {
 	getFrame().setVisible(true);
     }
 
-    public void loadScreen(GUI gui) {	
+    public void loadScreen(GUI gui) {
+	((AbstractGUI)gui).refresh();
 	getFrame().getContentPane().removeAll();
 	getFrame().getContentPane().add(gui.getPane(), 0);
 	getFrame().getContentPane().validate();

@@ -55,7 +55,9 @@ public class UserTableListener extends AbstractListener {
 		try {
 		    String username = (String)table.getValueAt(row, 0);	
 		    manager.removeUser(username);
-		    getExecutioner().loadUserTable();
+		    ((UserTableGUI)gui).getModel().removeRow(row);
+
+		    //getExecutioner().loadUserTable();
 		}
 		catch (Exception e) {
 		    e.printStackTrace();
