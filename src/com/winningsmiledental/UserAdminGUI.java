@@ -36,13 +36,9 @@ public class UserAdminGUI extends AbstractGUI {
      */
     public UserAdminGUI(ApplicationFrame af, UserAccountManager manager) {
 	super(af);
-
-	titleLabel.setText("Add User");
-	userField.setEditable(true);
-
-	this.manager = manager;
 	loadAccessLevels();
-	this.user = null;
+	this.manager = manager;
+	setUser();
     }
 
     /**
@@ -50,10 +46,19 @@ public class UserAdminGUI extends AbstractGUI {
      */
     public UserAdminGUI(ApplicationFrame af, UserAccountManager manager, String user) {
 	super(af);
-
-	this.manager = manager;
-	this.user = user;
 	loadAccessLevels();
+	this.manager = manager;
+	setUser(user);
+    }
+
+    public void setUser() {
+	titleLabel.setText("Add User");
+	userField.setEditable(true);
+	this.user = null;
+    }
+    
+    public void setUser(String user) {
+	this.user = user;
 	loadFields();
     }
 

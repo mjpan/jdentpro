@@ -15,16 +15,17 @@ public class PrintBDayGUI extends AbstractGUI {
     public JComboBox month, missing;
     public JButton create, cancel, choose;
     public JTextField filePath;
-    public RecordManager manager;
+    //public RecordManager manager;
 
     public PrintBDayGUI(ApplicationFrame af) {
 	super(af);
-	manager = new PatientRecordManager();
+	//manager = new PatientRecordManager();
 	loadComboBoxes();
     }
 
     public RecordManager getRecordManager() {
-	return manager;
+	//return manager;
+	return getExecutioner().getPatientRecordManager();
     }
 
     public void loadComboBoxes() {

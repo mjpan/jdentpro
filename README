@@ -1,2 +1,4 @@
 DentPro is a DOS based dental office management application using a FoxPro database backend. This is an attempt to recreate the DentPro user interface using Java as the front end and MySQL as the backend. 
 
+Requires:
+* MySQL database

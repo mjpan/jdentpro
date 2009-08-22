@@ -11,7 +11,11 @@
  <gridbagconstraints use="gbc" gridx="3" gridy="0"/>
 </button>
 
-<label LabelFor="RCN" font="Helvetica" foreground="blue" text="RCN">
+<button id="self" Text="Set self as Guarantor" ActionCommand="AC_CHANGE_TO_SELF">
+ <gridbagconstraints use="gbc" gridx="3" gridy="1"/>
+</button>
+
+<label LabelFor="RCN" font="Helvetica" foreground="blue" text="ID">
  <gridbagconstraints id="gbc1" gridx="1" gridy="2" weightx="0.1" weighty="0.1" anchor="GridBagConstraints.LINE_END"/>
 </label>
 <textfield id="RCN" Columns="20" editable="false">

@@ -59,7 +59,9 @@ public class JDentPro implements GraphicalApplication {
 	return url;
     }
 
-    public static Connection getConnection(String dbname) {
+    public static Connection getConnection(String dbname) 
+	throws DatabaseConnectionException {
+
 	Connection c = (Connection) dbConnections.get(dbname);
 	if (c==null) {
 	    c= establishConnection(getProperty("database.host"),
@@ -71,20 +73,35 @@ public class JDentPro implements GraphicalApplication {
 	return c;
     }
 
-    public static Connection establishConnection(String dbhost,
-						 String dbuser,
-						 String dbpassword,
-						 String dbname) {
+    public static Connection establishConnection
+	(String dbhost, String dbuser, String dbpassword, String dbname) 
+	throws DatabaseConnectionException {
+
+	String connectionString = "jdbc:mysql://"+dbhost+"/" + 
+	    dbname + "?user="+dbuser;
+
 	Connection c =null;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            c = 
-		DriverManager.getConnection("jdbc:mysql://"+dbhost+"/" + 
-					    dbname + "?user="+dbuser+"&password="+dbpassword);
-        } 
-	catch (Exception e) {
-	    e.printStackTrace();
+            c = DriverManager.getConnection
+		(connectionString+"&password="+dbpassword);
         }
+	catch (java.lang.ClassNotFoundException e) {
+	    throw new DatabaseConnectionException
+		("could not instantiate DriverManager for "+connectionString, e);
+	}
+	catch (java.lang.InstantiationException e) {
+	    throw new DatabaseConnectionException
+		("could not instantiate DriverManager for "+connectionString, e);
+	}
+	catch (java.lang.IllegalAccessException e) {
+	    throw new DatabaseConnectionException
+		("could not instantiate DriverManager for "+connectionString, e);
+	}
+	catch (SQLException e) {
+	    throw new DatabaseConnectionException
+		("DriverManager could not connect to "+connectionString, e);
+	}
 	return c;
     }
 
@@ -116,9 +133,11 @@ public class JDentPro implements GraphicalApplication {
     }
 
     public JDentPro() {
+	JDentProThreadGroup threadGroup = new JDentProThreadGroup("main");
+
 	jdpExecutioner = new JDentProExecutioner(this);
 	applicationFrame = ApplicationFrameFactory.createFrame(this);
-	new Thread(applicationFrame).start();
+	new Thread(threadGroup, applicationFrame).start();
     }
 
     public boolean runningOnMacOSX() {

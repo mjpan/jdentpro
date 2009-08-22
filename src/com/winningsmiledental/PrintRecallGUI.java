@@ -19,12 +19,13 @@ public class PrintRecallGUI extends AbstractGUI {
 
     public PrintRecallGUI(ApplicationFrame af) {
 	super(af);
-	manager = new PatientRecordManager();
+	//manager = new PatientRecordManager();
 	loadComboBoxes();
     }
 
     public RecordManager getRecordManager() {
-	return manager;
+	//return manager;
+	return getExecutioner().getPatientRecordManager();
     }
 
     public void loadComboBoxes() {

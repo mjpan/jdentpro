@@ -27,15 +27,27 @@ public abstract class AbstractGUI implements GUI {
 	setAppFrame(appFrame);
 	configure();
     }
-    
+    /**
+     * Sets the application frame.
+     *
+     * @param ApplicationFrame
+     */
     public void setAppFrame(ApplicationFrame appFrame) {
 	applicationFrame = appFrame;
     }
 
+    /**
+     * Returns the application frame.
+     *
+     * @return ApplicationFrame
+     */
     public ApplicationFrame getAppFrame() {
 	return applicationFrame;
     }
 
+    /**
+     * Calls the setupGUI() method.
+     */
     public void configure() {
 	try {
 	    setupGUI();
@@ -46,28 +58,52 @@ public abstract class AbstractGUI implements GUI {
 	}
     }
 
+    /**
+     * Returns the Collection of acttionableItems.
+     *
+     * @return Collection actionableItems.
+     */
     public Collection getActionableItems() {
 	return actionableItems;
     }
 
+    /**
+     * Sets up the GUI. Calls method connectActionListeners().
+     */
     protected void setupGUI () throws Exception {
-	System.out.println("creating new SwingEngine");
+	//System.out.println("creating new SwingEngine");
 	swix = new SwingEngine( this );
 	String urlString = getGUIxml();
 	URL url = getClass().getResource(urlString);
 	swix.render(url);
-	System.out.println("created new SwingEngine");
+	//System.out.println("created new SwingEngine");
 	connectActionListeners();
+    }
+
+    protected void refresh() {
     }
 
     protected abstract String getGUIxml();
     
+    /**
+     * Connects action listeners.
+     */
     protected abstract void connectActionListeners();
 
+    /**
+     * Returns the main jPanel
+     *
+     * @return JPanel
+     */
     public JPanel getPane() {
 	return ((JPanel)swix.getRootComponent());
     }
 
+    /**
+     * Returns the executioner.
+     *
+     * @return Executioner
+     */
     public Executioner getExecutioner() {
 	return getAppFrame().getApplication().getExecutioner();
     }

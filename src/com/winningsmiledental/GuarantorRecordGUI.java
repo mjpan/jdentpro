@@ -18,29 +18,52 @@ public class GuarantorRecordGUI extends AbstractGUI {
     public JTextField Address, City, State, ZipCode;
     public JComboBox Sex, month, day, year;
     public JButton updateFamily, recall, save, cancel, change;
-    
-    private RecordManager rManager;
+    public JButton self;
+
+    //private RecordManager rManager;
     private boolean isNew;
     private int ptRCN;
     private int gPatNum;
 
-    public GuarantorRecordGUI(ApplicationFrame af, int ptRCN, RecordManager manager) {
+    private GuarantorRecord record;
+
+    public GuarantorRecordGUI(ApplicationFrame af, int ptRCN) {
 	super(af);
-	rManager = manager;
-	this.ptRCN = ptRCN;
-	isNew = true;
-	gPatNum = rManager.getNewPatNum();
 	loadComboBoxes();
+	isNew = true;
+	config(ptRCN);
     }
 
-    public GuarantorRecordGUI(ApplicationFrame af, int ptRCN, RecordManager manager, int gPatNum) {
+    public GuarantorRecordGUI(ApplicationFrame af, int ptRCN, int gPatNum) {
 	super(af);
-	rManager = manager;
-	isNew = false;
-	this.ptRCN = ptRCN;
-	this.gPatNum = gPatNum;
 	loadComboBoxes();
-	loadValues(gPatNum);
+	isNew = false;
+	config(ptRCN,gPatNum);
+    }
+
+    // looks like this should be somewhere else
+    protected void setSelfAsGuarantor() throws Exception {
+	int patnum = getExecutioner().getPatientRecordManager().getPatNumOfPatientWithRCN(getPatientRCN());
+	isNew = false;
+	setGuarantor(patnum);
+
+    }
+
+    public void config(int ptRCN) {
+	this.ptRCN = ptRCN;
+	emptyValues();
+    }
+
+    public void config(int ptRCN, int gPatNum) {
+	this.ptRCN = ptRCN;
+	setGuarantor(gPatNum);
+    }
+
+    protected void setGuarantor(int guarantorID) {
+	gPatNum = guarantorID;
+	//if (!isNewGuarantor()) {
+	loadValues(guarantorID);
+	//}
     }
 
     public int getPatientRCN() {
@@ -55,8 +78,35 @@ public class GuarantorRecordGUI extends AbstractGUI {
 	return isNew;
     }
 
+    public GuarantorRecord getRecord() throws Exception {
+	if (record == null) {
+	    throw new Exception("GuarantorRecordGUI.getRecord() needs to be implemented");
+	}
+	return record;
+    }
+
+    public void emptyValues() {
+	RCN.setText("");
+	LastName.setText("");
+	FirstName.setText("");
+	Address.setText("");
+	City.setText("");
+	State.setText("");
+	ZipCode.setText("");
+	Telephone.setText("");
+
+	//SSN.setText("");
+	generateSSN();
+	
+	Sex.setSelectedIndex(0);
+	year.setSelectedIndex(0);
+	month.setSelectedIndex(0);
+	day.setSelectedIndex(0);
+    }
+
     public void loadValues(int patnum) {
 	RCN.setText(Integer.toString(patnum));
+	/*
 	ResultSet rs = getRecordManager().getRecordWithPatNum(patnum);
 	try {
 	    rs.next();
@@ -76,6 +126,27 @@ public class GuarantorRecordGUI extends AbstractGUI {
 	}
 	catch (Exception e) {
 	    e.printStackTrace();
+	}
+	*/
+	try {
+	 record = 
+	    (GuarantorRecord) getExecutioner().getGuarantorRecordManager().getRecordUsingInternalID(patnum);
+	LastName.setText(record.getLastName());
+	FirstName.setText(record.getFirstName());
+	Address.setText(record.getAddressStreet());
+	City.setText(record.getAddressCity());
+	State.setText(record.getAddressState());
+	ZipCode.setText(record.getAddressZip());
+	Telephone.setText(record.getHomePhone());
+	SSN.setText(record.getSsn());
+	Sex.setSelectedIndex(record.getGender()+1);
+	String[] bday = record.getBirthday().split("-");
+	year.setSelectedItem(new Integer(bday[0]));
+	month.setSelectedItem(new Integer(bday[1]));
+	day.setSelectedItem(new Integer(bday[2]));
+	}
+	catch (Exception e) {
+	    new ErrorMessage("failed on loading patient record >> "+e.getMessage());
 	}
     }
 
@@ -99,7 +170,8 @@ public class GuarantorRecordGUI extends AbstractGUI {
     }
 
     public RecordManager getRecordManager() {
-	return rManager;
+	//return rManager;
+	return getExecutioner().getGuarantorRecordManager();
     }
 
     public String getLastName() {
@@ -141,13 +213,19 @@ public class GuarantorRecordGUI extends AbstractGUI {
 	return 0;
     }
 
+    public void generateSSN() {
+	SSN.setText(((JDentProExecutioner)getExecutioner()).generateSSN());
+    }
+
     public String getSSN() {
 	String ssn = SSN.getText();
+	/*
 	ssn = ssn.replaceAll("\\D", "");
 	if (ssn.length() == 9) {
 	    return ssn;
 	}
-	return null;
+	*/
+	return ssn;
     }
 
     public String getBirthdate() {
@@ -172,6 +250,7 @@ public class GuarantorRecordGUI extends AbstractGUI {
 	actionableItems.add(save);
 	actionableItems.add(cancel);
 	actionableItems.add(change);
+	actionableItems.add(self);
 	GuarantorRecordListener listener = new GuarantorRecordListener(this);
     }
 

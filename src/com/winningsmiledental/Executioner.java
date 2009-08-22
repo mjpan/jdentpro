@@ -12,23 +12,26 @@ public interface Executioner {
 
     public int getCurrentEmployeeID();
 
+    public PatientRecordManager getPatientRecordManager();
+    public GuarantorRecordManager getGuarantorRecordManager();
+
     public void loadLoginScreen();
     
     public void loadMainMenu();
 
     public void loadPatientInfo();
 
-    public void loadPatientRecord(RecordManager manager);
+    public void loadPatientRecord();
 
-    public void loadPatientRecord(RecordManager manager, int rcn);
+    public void loadPatientRecord(int rcn);
 
     public void loadGuarantorInfo(int rcn);
 
-    public void loadGuarantorRecord(int ptRCN, RecordManager manager);
+    public void loadGuarantorRecord(int ptRCN);
 
-    public void loadGuarantorRecord(int ptRCN, RecordManager manager, int gPatNum);
+    public void loadGuarantorRecord(int ptRCN, int gPatNum);
 
-    public void loadRecall(RecordManager manager, int patnum);
+    public void loadRecall(int patnum);
 
     public void loadSpecialFunctions();
 

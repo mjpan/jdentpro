@@ -32,3 +32,20 @@ To build the Mac OS X application bundle
 
 
 Upcoming: automated installation of this package
+
+
+
+Ensure that you have a MySQL database running.  By default, JDentPro uses the following info.  These can be changed in the config file located at src/resources/config/application.config.
+  * database: dental
+  * host: localhost
+  * user: apache
+  * password: apache
+  * port: 5432
+
+The following describes how to configure the MySQL database for the jDentPro application.  
+* tart the MySQL databae and connecting to it as root. 
+* Ensure that you have the user created.  To do so, run the following commands
+  * create user '$user'@'$host' identified by '$password';
+  * grant all on *.* to '$user'@'$host';
+* Ensure that you have the database created.  To do so, run the following command:
+  * create database $database;
