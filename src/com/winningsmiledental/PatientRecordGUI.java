@@ -17,32 +17,53 @@ public class PatientRecordGUI extends AbstractGUI {
     public JTextField RCN, LastName, FirstName, MiddleName, title, nickname, SSN, guarName;
     public JTextField Address, Line2, city, state, ZipCode,  homePhone, wkPhone, mobilePhone;
     public JComboBox Sex, month, day, year;
-    public JCheckBox active;
-    public JButton guarantor, recall, cancel, save;
+
+    public JButton guarantor, recall, cancel, save, self;
     public boolean isNewPatient;
-    public RecordManager manager;
+    //public RecordManager manager;
     public int patnum, gPatNum;
+
+    //this shows whether the patient is active
+    //ie being actively recalled for dental work
+    public JCheckBox active;
+
+    private PatientRecord record;
 
     /*
       Creates GUI for a new patient.
     */
-    public PatientRecordGUI(ApplicationFrame af, RecordManager manager) {
+    public PatientRecordGUI(ApplicationFrame af) {
 	super(af);
-	this.manager = manager;
+	//this.manager = manager;
 	loadComboBoxes();
-	isNewPatient = true;
-	setRCN();
+	setPatient();
+
     }
 
     /*
       Creates GUI for existing patient with RCN rcn.
     */
-    public PatientRecordGUI(ApplicationFrame af, RecordManager manager, int rcn) {
+    public PatientRecordGUI(ApplicationFrame af,  int rcn) {
 	super(af);
-	this.manager = manager;
+	//this.manager = manager;
 	loadComboBoxes();
+	setPatient(rcn);
+    }
+
+    public void setPatient() {
+	emptyValues();
+	isNewPatient = true;
+	setRCN();
+
+	//new Exception("called PatientRecordGUI() for new patient").printStackTrace();
+    }
+
+    public void setPatient(int rcn) {
+	emptyValues();
 	isNewPatient = false;
 	loadValues(rcn);
+
+	//new Exception("called PatientRecordGUI() for existing patient having rcn "+rcn).printStackTrace();
     }
 
     /*
@@ -56,21 +77,99 @@ public class PatientRecordGUI extends AbstractGUI {
       Returns the RecordManager.
     */
     public RecordManager getRecordManager() {
-	return manager;
+	//return manager;
+	return getExecutioner().getPatientRecordManager();
     }
 
     /*
       Sets the texfield to next available RCN.
     */
     public void setRCN() {
-	int s = getRecordManager().getNewRCN();
-	RCN.setText(Integer.toString(s));
+	try {
+	    int s = ((PatientRecordManager)getRecordManager()).getNewRCN();
+	    RCN.setText(Integer.toString(s));
+	}
+	catch (Exception e) {
+	    new ErrorMessage("error on getting rcn for new patient >> "+e.getMessage());
+	}
+    }
+
+    public void emptyValues() {
+	    RCN.setText("");
+	    LastName.setText("");
+	    FirstName.setText("");
+	    MiddleName.setText("");
+	    title.setText("");
+	    nickname.setText("");
+	    Address.setText("");
+	    Line2.setText("");
+	    city.setText("");
+	    state.setText("");
+	    ZipCode.setText("");
+	    homePhone.setText("");
+	    wkPhone.setText("");
+	    mobilePhone.setText("");
+
+	    //SSN.setText("");
+	    generateSSN();
+
+	    Sex.setSelectedIndex(0);
+	    year.setSelectedIndex(0);
+	    month.setSelectedIndex(0);
+	    day.setSelectedIndex(0);
+	    guarName.setText("");
+
+	    getRecord();
+    }
+
+    public Record getRecord() {
+	if (record == null) {
+	    record = new PatientRecord(getLastName(),
+				       getFirstName(),
+				       getMiddleName(),
+				       getTitle(),
+				       getNickname(),
+				       getAddress(),
+				       getAddress2(),
+				       getCity(),
+				       getState(),
+				       getZipCode(),
+				       getHmPhone(),
+				       getMobile(),
+				       getWkPhone(),
+				       getSSN(),
+				       getGender(),
+				       getBirthdate(),
+				       getExecutioner().getCurrentEmployeeID());
+	}
+	else {
+	    record.setLastName(getLastName());
+	    record.setFirstName(getFirstName());
+	    record.setMiddleName(getMiddleName());
+	    record.setSalutation(getTitle());
+	    record.setNickname(getNickname());
+	    record.setAddressStreet(getAddress());
+	    record.setAddressStreet2(getAddress2());
+	    record.setAddressCity(getCity());
+	    record.setAddressState(getState());
+	    record.setAddressZip(getZipCode());
+	    record.setHomePhone(getHmPhone());
+	    record.setMobilePhone(getMobile());
+	    record.setWorkPhone(getWkPhone());
+	    record.setSsn(getSSN());
+	    record.setGender(getGender());
+	    record.setBirthday(getBirthdate());
+	}
+
+
+	return record;
     }
 
     /*
       Loads values of patient with RCN rcn into respective textfields & comboboxes.
     */
     public void loadValues(int rcn) {
+	/*
 	try {
 	    ResultSet rs = getRecordManager().getRecordWithRCN(rcn);
 	    rs.next();
@@ -102,13 +201,58 @@ public class PatientRecordGUI extends AbstractGUI {
 	    else if (gPatNum > 0) {
 		guarName.setText(manager.getNameOfPatientWithPatNum(gPatNum));
 	    }
-	    ResultSet rs1 = getRecordManager().getRecallWithPatNum(patnum);
-	    if (rs1.next() && rs1.getInt(5) == 1) {
+
+	    if (!getRecordManager().hasActiveRecall(patnum)) {
 		active.setSelected(false);
 	    }
 	}
 	catch (Exception e) {
 	    e.printStackTrace();
+	}
+	*/
+	try {
+	    record = 
+	    (PatientRecord) getExecutioner().getPatientRecordManager().getRecordUsingExternalID(rcn);
+	patnum = record.getInternalID();
+	RCN.setText(Integer.toString(record.getExternalID()));
+	LastName.setText(record.getLastName());
+	FirstName.setText(record.getFirstName());
+	MiddleName.setText(record.getMiddleName());
+	title.setText(record.getSalutation());
+	nickname.setText(record.getNickname());
+	Address.setText(record.getAddressStreet());
+	Line2.setText(record.getAddressStreet2());
+	city.setText(record.getAddressCity());
+	state.setText(record.getAddressState());
+	ZipCode.setText(record.getAddressZip());
+	homePhone.setText(record.getHomePhone());
+	wkPhone.setText(record.getWorkPhone());
+	mobilePhone.setText(record.getMobilePhone());
+	SSN.setText(record.getSsn());
+	Sex.setSelectedIndex(record.getGender()+1);
+	String[] bday = record.getBirthday().split("-");
+	year.setSelectedItem(new Integer(bday[0]));
+	month.setSelectedItem(new Integer(bday[1]));
+	day.setSelectedItem(new Integer(bday[2]));
+	gPatNum = record.getGuarantorID();
+	if (patnum == gPatNum) {
+	    guarName.setText("Self");
+	}
+	else if (gPatNum > 0) {
+	    guarName.setText(getExecutioner().getPatientRecordManager().getNameOfPatientWithPatNum(gPatNum));
+	}
+
+	if (!getExecutioner().getPatientRecordManager().hasActiveRecall(patnum)) {
+	    active.setSelected(false);
+	}
+	else {
+	    active.setSelected(true);
+	}
+
+	
+	}
+	catch (Exception e) {
+	    new ErrorMessage("failed on loading patient record >> "+e.getMessage());
 	}
     }
 
@@ -269,12 +413,19 @@ public class PatientRecordGUI extends AbstractGUI {
     */
     public String getSSN() {
 	String ssn = SSN.getText();
+	/*
 	ssn = ssn.replaceAll("\\D", "");
 	if (ssn.length() == 9) {
 	    return ssn;
 	}
 	//return null;
 	return "";
+	*/
+	return ssn;
+    }
+    
+    public void generateSSN() {
+	SSN.setText(((JDentProExecutioner)getExecutioner()).generateSSN());
     }
 
     /*
@@ -305,6 +456,10 @@ public class PatientRecordGUI extends AbstractGUI {
 	return active.isSelected();
     }
 
+    public JCheckBox getRecallActiveCheckbox() {
+	return active;
+    }
+
     protected String getGUIxml() {
 	return "/xml/PatientRecord.xml";
     }
@@ -314,6 +469,7 @@ public class PatientRecordGUI extends AbstractGUI {
 	actionableItems.add(recall);
 	actionableItems.add(cancel);
 	actionableItems.add(save);
+	actionableItems.add(self);
 	PatientRecordListener listener = new PatientRecordListener(this);
     }
 

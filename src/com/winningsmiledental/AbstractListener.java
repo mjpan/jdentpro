@@ -33,6 +33,9 @@ public abstract class AbstractListener implements Listener {
 	configure();
     }
 
+    /**
+     * Sets gui to GUI g. 
+     */
     public void setGUI(GUI g) {
 	gui = g;
 	Iterator actionableItemIter = g.getActionableItems().iterator();
@@ -46,12 +49,23 @@ public abstract class AbstractListener implements Listener {
 
     }
 
+    /**
+     * Returns this listener's corresponding GUI.
+     *
+     * @return GUI
+     */
     protected GUI getGUI() {
 	return gui;
     }
 
     public abstract void actionPerformed (ActionEvent ae);
 
+
+    /**
+     * Returns the Executioner.
+     *
+     * @return Executioner
+     */
     public Executioner getExecutioner() {
 	return getGUI().getAppFrame().getApplication().getExecutioner();
     }

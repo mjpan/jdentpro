@@ -1,4 +1,3 @@
-
 package com.winningsmiledental;
 
 import java.awt.*;
@@ -16,11 +15,12 @@ import java.sql.*;
 
 
 
-public class PatientRecordListener extends AbstractListener {
+public class PatientRecordListener extends AbstractListener implements ItemListener {
 
 
     public PatientRecordListener(GUI gui) {
 	super(gui);
+	((PatientRecordGUI)gui).getRecallActiveCheckbox().addItemListener(this);
     }
 
     public void actionPerformed(ActionEvent ae){
@@ -30,48 +30,85 @@ public class PatientRecordListener extends AbstractListener {
 
 	PatientRecordGUI temp = (PatientRecordGUI)gui;
 
-	RecordManager manager = temp.getRecordManager();
-
 	if (command.equals("AC_CANCEL")) {
 	    getExecutioner().loadPatientInfo();
-        } 
+	    return;
+        }
+
+	try {
+	    getExecutioner().getPatientRecordManager().validateSSN(temp.getSSN());
+	    //save data and return to patient info table
+	    
+	}
+	catch (InvalidSSNException e) {
+	    e.printStackTrace();
+	    new ErrorMessage(e.getMessage());
+	    return;
+	}
+	catch (DuplicateSSNException e) {
+	    e.printStackTrace();
+	    new ErrorMessage(e.getMessage());
+	    return;
+	}
+ 
+	saveAction(temp);
+	int ptRCN = temp.getRCN();
+
+	try {
+	    Thread.sleep(1000);
+	}
+	catch (InterruptedException e) {
+	}
+
+	if (command.equals("AC_SET_TO_SELF")) {
+	    try {
+		int gPatNum =
+		    getExecutioner().getPatientRecordManager().getPatNumOfPatientWithRCN(ptRCN);
+		getExecutioner().loadGuarantorRecord(ptRCN, gPatNum); 
+	    }
+	    catch (Exception e) {
+		e.printStackTrace();
+		new ErrorMessage("failed on setting self to guarantor >> "+e.getMessage());
+		return;
+	    }
+	}
 	else if (command.equals("AC_GUARANTOR")) {
-	    saveAction(temp, manager);
-	    int ptRCN = temp.getRCN();
+
 	    //if no guarantor is set, load guarantor list table
 	    //else, load record of current guarantor
 	    if (temp.getGuarantorName().equals("")) {
 		getExecutioner().loadGuarantorInfo(ptRCN);
 	    }
 	    else {
-		getExecutioner().loadGuarantorRecord(ptRCN, manager, temp.getGPatNum());
+		getExecutioner().loadGuarantorRecord(ptRCN, temp.getGPatNum());
 	    }
 	}
 	else if (command.equals("AC_RECALL")) {
 	    //save data and load recall
-	    saveAction(temp, manager);
-	    int patnum = temp.getPatNum();
-	    getExecutioner().loadRecall(manager, patnum);
-	}
-	else if (command.equals("AC_SAVE")) {
-	    //make sure ssn has 9 digits.
-	    if (!temp.getSSN().matches("\\d{9}")) {
-		new ErrorMessage("Invalid SSN");
+	    try {
+		int patnum = 
+		    getExecutioner().getPatientRecordManager().getPatNumOfPatientWithRCN(ptRCN);
+		getExecutioner().loadRecall(patnum);
+	    }
+	    catch (Exception e) {
+		e.printStackTrace();
+		new ErrorMessage("failed loading recall for patient having rcn "+ptRCN+" >> "+e.getMessage());
 		return;
 	    }
-
-	    //save data and return to patient info table
-	    saveAction(temp, manager);
-	    getExecutioner().loadPatientInfo();
 	}
-	
+	else if (command.equals("AC_SAVE")) {
+	    getExecutioner().loadPatientInfo();
+
+	}
     }
 
     /*
       saves values entered into fields and updates database to those values
     */
-    public void saveAction(PatientRecordGUI temp, RecordManager manager) {
+    public void saveAction(PatientRecordGUI temp) {
+	PatientRecordManager manager = getExecutioner().getPatientRecordManager();
 	try {
+	    /*
 	    int rcn = temp.getRCN();
 	    int patnum = temp.getPatNum();
 	    String last = temp.getLastName();
@@ -92,40 +129,76 @@ public class PatientRecordListener extends AbstractListener {
 	    String bday = temp.getBirthdate();
 	    int employee = getExecutioner().getCurrentEmployeeID();
 	    PreparedStatement stmt = null;
+	    */
+	    int employee = getExecutioner().getCurrentEmployeeID();
+	    PatientRecord record = (PatientRecord) temp.getRecord();
+
 	    //if a new patient and does not exist as a guarantor, insert new patient
 	    //if a new patient and exists as guarantor, update guarantor record and add rcn
 	    //if not a new patient, update values
 	    boolean editPatient = true;
 	    if (temp.isNewPatient()) {
-		if (manager.patientAlreadyExists(ssn)) {
-		    manager.editGuarantor(ssn, rcn, employee);
+		//if "patient" already exists as a guarantor
+		if (manager.patientAlreadyExists(record.getSsn())) {
+		    //this should use the record object instead
+		    manager.editGuarantor(record.getSsn(), temp.getRCN(), employee);
 		}
 		else {
+		    /*
 		    manager.addPatient(rcn, last, first, middle, salutation, nickname,
 				       address, address2, city, state, zip, hmPhone,
 				       mobile, wkPhone, ssn, gender, bday, employee);
+		    */
+		    manager.addRecord(record);
 		    editPatient = false;
 		}
 	    }
 	    if (editPatient) {
+		/*
 		manager.editPatient(rcn, last, first, middle, salutation,
 				    nickname, address, address2, city, state, zip,
 				    hmPhone, mobile, wkPhone, ssn, gender, bday, employee);
+		*/
+		manager.editRecord(record);
 	    }
+
 	    //if 'active patient' is unchecked, deactivate & v/v.
+	    //activeness refers to whether we are still
+	    //actively sending the patient for dental work recalls
 	    if (!temp.isActive()) {
-		manager.deactivatePatientRecall(patnum);
+		manager.deactivatePatientRecall(record.getInternalID());
 	    }
 	    else {
-		manager.activateExistingPatientRecall(patnum);
+		manager.activateExistingPatientRecall(record.getInternalID());
 	    }
 	}
 	catch (Exception e) {
 	    e.printStackTrace();
+	    new ErrorMessage("failed on saving patient record >> "+e.getMessage());
 	}
     }
     
-   
+    public void itemStateChanged(ItemEvent e) {
+	Object source = e.getItemSelectable();
+
+	PatientRecordGUI recordGUI = (PatientRecordGUI)gui;
+	//RecordManager manager = recordGUI.getRecordManager();
+	int patnum = recordGUI.getPatNum();
+
+	/* if recall activated/disabled */
+	if (source == recordGUI.getRecallActiveCheckbox()) {
+	    if (!recordGUI.isActive()) {
+		try {
+		    getExecutioner().getPatientRecordManager().deactivatePatientRecall(patnum);
+		}
+		catch (Exception ex) {
+		    ex.printStackTrace();
+		    //shouldnt happen
+		    new ErrorMessage("error when deactivating patient recall >> "+ex.getMessage());
+		}
+	    }
+	}
+    }
 
 }
 

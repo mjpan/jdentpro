@@ -116,9 +116,11 @@ public class JDentPro implements GraphicalApplication {
     }
 
     public JDentPro() {
+	JDentProThreadGroup threadGroup = new JDentProThreadGroup("main");
+
 	jdpExecutioner = new JDentProExecutioner(this);
 	applicationFrame = ApplicationFrameFactory.createFrame(this);
-	new Thread(applicationFrame).start();
+	new Thread(threadGroup, applicationFrame).start();
     }
 
     public boolean runningOnMacOSX() {

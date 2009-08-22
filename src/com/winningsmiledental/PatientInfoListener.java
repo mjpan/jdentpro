@@ -27,33 +27,34 @@ public class PatientInfoListener extends AbstractListener {
     public void actionPerformed(ActionEvent ae){
         String command = ae.getActionCommand();
 
-	RecordManager manager = ((PatientInfoGUI)gui).getRecordManager();
+	//RecordManager manager = ((PatientInfoGUI)gui).getRecordManager();
 
 	if (command.equals("AC_CANCEL")) {
 	    getExecutioner().loadMainMenu();
         } 
 	else if (command.equals("AC_NEW")) {
-	    getExecutioner().loadPatientRecord(manager);
+	    getExecutioner().loadPatientRecord();
 
 	}
 	else if (command.equals("AC_EDIT")) {
-	    System.out.println("attempting command >> edit");
+	    //System.out.println("attempting command >> edit");
 	    JTable table = ((PatientInfoGUI)gui).getTable();
 	    int row = table.getSelectedRow();
-	    System.out.println("row selected: " + row);
+	    //System.out.println("row selected: " + row);
 	    if (row >= 0) {
 		try {
-		    int rcn = ((Integer)table.getValueAt(row, 3)).intValue();
+		    int rcn = ((Integer)table.getValueAt(row, 4)).intValue();
 		    System.out.println("rcn: " + rcn);
-		    getExecutioner().loadPatientRecord(manager, rcn);
+		    getExecutioner().loadPatientRecord(rcn);
 		}
 		catch (Exception e) {
 		    e.printStackTrace();
 		}
 	    }
 	}	   
-
-	
+	else if (command.equals("AC_SEEK")) {
+	    ((PatientInfoGUI)gui).refreshTable();
+	}
     }
     
    

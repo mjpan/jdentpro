@@ -10,27 +10,53 @@ public abstract class AbstractRecordManager implements RecordManager {
 
     protected String databaseName;
 
-    public AbstractRecordManager() {
-	this("dental");
+    private Executioner executioner;
+
+    public AbstractRecordManager(Executioner executioner) {
+	this(executioner, "dental");
     }
 
-    public AbstractRecordManager(String databaseName) {
+    public AbstractRecordManager(Executioner executioner, String databaseName) {
 	this.databaseName = databaseName;
 	establishConnection();
+	setExecutioner(executioner);
     }
 
+    public Executioner getExecutioner() {
+	return executioner;
+    }
+
+    private void setExecutioner(Executioner e) {
+	executioner = e;
+    }
+
+    /**
+     * Establishes connection to database.
+     */
     protected void establishConnection() {
 	connection = JDentPro.getConnection(databaseName);
     }
 
-    protected Connection getConnection() {
+    /**
+     * Returns connection to database.
+     *
+     * @return Connection
+     */
+    public Connection getConnection() {
 	return connection;
     }
 
+    /**
+     * Queries and returns a ResultSet with name, address, hmphone and rcn of all patients.
+     * Ordered by RCN.
+     *
+     * @return ResultSet Name, Address, HmPhone and RCN of all patients.
+     */
     public ResultSet getAllPatientRecords() {
 	try {
 	    Statement stmt = connection.createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT P.LName, P.FName, P.Address, P.HmPhone, P.RCN FROM patient P WHERE P.RCN is not null ORDER BY P.RCN;");// P.RCN > 1000 GROUP BY P.RCN;");
+	    ResultSet rs = 
+		stmt.executeQuery("SELECT P.LName, P.FName, P.Address, P.HmPhone, P.RCN FROM patient P WHERE P.RCN is not null ORDER BY P.RCN;");
 	    return rs;
 	}
 	catch (Exception e) {
@@ -39,13 +65,17 @@ public abstract class AbstractRecordManager implements RecordManager {
 	return null;
     }
 
-    /*
-      Returns all patients, shows PatNum.
-    */
+    /**
+     * Queries and returns a ResultSet with name, address, hmphone and patnum of all guarantors.
+     * Ordered by patnum.
+     *
+     * @return ResultSet Name, Address, HmPhone and PatNum of all guarantors.
+     */
     public ResultSet getAllGuarantorRecords() {
 	try {
 	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT P.LName, P.FName, P.Address, P.HmPhone, P.PatNum FROM patient P ORDER BY P.PatNum");// GROUP BY P.PatNum");
+	    ResultSet rs = 
+		stmt.executeQuery("SELECT P.LName, P.FName, P.Address, P.HmPhone, P.PatNum FROM patient P ORDER BY P.PatNum");
 	    return rs;
 	}
 	catch (Exception e) {
@@ -54,12 +84,21 @@ public abstract class AbstractRecordManager implements RecordManager {
 	return null;
     }
 
-    /*
-      Updates address & phone number of patiets who share current guarantor
-    */
+    /**
+     * Updates address and home phone number of all patients who share a guarantor.
+     *
+     * @param int    patnum of guarantor
+     * @param String address of guarantor
+     * @param String city of guarantor
+     * @param String state of guarantor
+     * @param String zip cod of guarantor
+     * @param String home phone of guarantor
+     * @param int    employeenum of employee currently logged in
+     */
     public void updateAllPatientRecordsWithGuarantor(int patnum, String address, String city, String state, String zip, String hmPhone, int employee) {
 	try {
-	    PreparedStatement stmt = connection.prepareStatement("UPDATE patient SET Address=?, City=?, State=?, Zip=?, HmPhone=?, LastUpdatedBy=? WHERE Guarantor=?");
+	    PreparedStatement stmt = 
+		connection.prepareStatement("UPDATE patient SET Address=?, City=?, State=?, Zip=?, HmPhone=?, LastUpdatedBy=? WHERE Guarantor=?");
 	    stmt.setString(1, address);
 	    stmt.setString(2, city);
 	    stmt.setString(3, state);
@@ -74,13 +113,17 @@ public abstract class AbstractRecordManager implements RecordManager {
 	}
     }
 
-    /*
-      Returns a patients guarantor number
-    */
+    /**
+     * Returns a patient's guarantor's patnum.
+     *
+     * @param int  RCN of patient being queried.
+     * @return int patnum of patient's gurantor.
+     */
     public int getGuarantorOfPatient(int rcn) {
 	try {
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("Select guarantor FROM patient WHERE RCN=" + rcn);
+	    PreparedStatement stmt = getConnection().prepareStatement("Select guarantor FROM patient WHERE RCN=?");
+	    stmt.setInt(1, rcn);
+	    ResultSet rs = stmt.executeQuery();
 	    rs.first();
 	    return rs.getInt(1);
 	}
@@ -90,103 +133,37 @@ public abstract class AbstractRecordManager implements RecordManager {
 	return -1;
     }
 
-    /*
-      Returns patient record with given rcn.
-    */
-    public ResultSet getRecordWithRCN(int rcn) {
-	try {
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT P.PatNum, P.LName, P.FName, P.MiddleI, P.Salutation, P.Preferred, P.Address, P.Address2, P.City, P.State, P.Zip, P.HmPhone, P.WkPhone, P.WirelessPhone, P.SSN, P.Gender, P.Birthdate, P.Guarantor FROM patient P WHERE P.RCN=" + rcn); 
-	    return rs;
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return null;
-    }
 
-    /*
-      Returns patient record with given patnum.
-    */
-    public ResultSet getRecordWithPatNum(int patnum) {
-	try {
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT P.LName, P.FName, P.Address, P.City, P.State, P.Zip, P.HmPhone, P.SSN, P.Birthdate, P.Gender FROM patient P WHERE P.PatNum=" + patnum);
-	    return rs;
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return null;
-    }
 
-    /*
-      Returns name of patient with given patnum in form "last name, first name".
-    */
+    /**
+     * Returns String of patient with given patnum in the form "LName, FName".
+     *�
+     * @param int     PatNum of patient being queried.
+     * @return String Name of patient in form "LName, Fname"
+     */
     public String getNameOfPatientWithPatNum(int patnum) {
+	String name = "";
 	try {
 	    Statement stmt = getConnection().createStatement();
 	    ResultSet rs = stmt.executeQuery("Select P.LName, P.FName FROM patient P WHERE P.PatNum = " + patnum);
 	    rs.first();
-	    return rs.getString(1) + ", " + rs.getString(2);
+	    //return rs.getString(1) + ", " + rs.getString(2);
+	    name = rs.getString(1) + ", " + rs.getString(2);
 	}
 	catch (Exception e) {
 	    e.printStackTrace();
 	}
-	return null;
+	return name;
     }
 
-    /*
-      Returns rcn of patient with given patnum.
-    */
-    public int getRCNOfPatientWithPatNum(int patnum) {
-	try {
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("Select RCN FROM patient P WHERE P.PatNum = " + patnum);
-	    rs.first();
-	    return rs.getInt(1);
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return -1;
-    }
 
-    /*
-      Returns rcn of patient with given patnum.
-    */
-    public int getPatNumOfPatientWithRCN(int rcn) {
-	try {
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("Select PatNum FROM patient WHERE RCN = " + rcn);
-	    rs.first();
-	    return rs.getInt(1);
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return -1;
-    }
 
+    /**
+     * Returns lowest unassigned PatNum.
+     *
+     * @return int lowest unassigned PatNum.
+     */
     /*
-      Returns next available/empty RCN
-    */
-    public int getNewRCN() {
-	try{
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT MAX(RCN) + 1 from patient");
-	    rs.first();
-	    return rs.getInt(1);
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return -1;
-    }
-
-    /*
-      Returns next available/empty PatNum.
-    */
     public int getNewPatNum() {
 	try {
 	    Statement stmt = getConnection().createStatement();
@@ -199,182 +176,60 @@ public abstract class AbstractRecordManager implements RecordManager {
 	}
 	return -1;
     }
-
-    /*
-      Returns the PatNum of patient with SSN ssn.
     */
-    public int getPatNumOfRecordWithSSN(String ssn) {
+
+    /**
+     * Returns int PatNum of patient with given SSN.
+     *
+     * @param String SSN of patient being queried.
+     * @return int   Patnum of patient with given SSN.
+     */
+    public int getPatNumOfRecordWithSSN(String ssn) throws Exception{
 	try {
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT PatNum FROM patient WHERE SSN=" + ssn);
-	    rs.next();
-	    return rs.getInt(1);
-	}
-	catch (Exception e) {
-	    
-	}
-	return -1;
-    }
+	    //Statement stmt = getConnection().createStatement();
+	    //ResultSet rs = stmt.executeQuery("SELECT PatNum FROM patient WHERE SSN=?");
 
-    /*
-      Returns patients with given last name
-    */
-    public ResultSet getRecordsWithLastName(String name) {
-	try {
-	    Statement stmt = getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT P.LName, P.FName, P.Address, P.HmPhone, P.PatNum FROM patient P WHERE P.LName = " + name);
-	    return rs;
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return null;
-    }
+	    PreparedStatement stmt = 
+		getConnection().prepareStatement("SELECT PatNum FROM patient WHERE SSN=?");
+	    stmt.setString(1, ssn);
+	    ResultSet rs = stmt.executeQuery();
 
-    /*
-      Adds new patient.
-    */
-    public void addPatient(int rcn, String last, String first, String middle, String salutation, 
-			   String nickname, String address, String address2, String city, String state, 
-			   String zip, String hmPhone, String mobile, String wkPhone, String ssn, int gender, String bday, int employee) {
-	try {
-	    PreparedStatement stmt = null;
-	    //if a new patient, insert new patient
-	    stmt = getConnection().prepareStatement("INSERT INTO patient (RCN, LName, FName, MiddleI, Salutation, Preferred, Address, Address2, City, State, Zip, HmPhone, WirelessPhone, WkPhone, SSN, Gender, Birthdate, LastUpdatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-	    stmt.setInt(1, rcn);
-	    stmt.setString(2, last);
-	    stmt.setString(3, first);
-	    stmt.setString(4, middle);
-	    stmt.setString(5, salutation);
-	    stmt.setString(6, nickname);
-	    stmt.setString(7, address);
-	    stmt.setString(8, address2);
-	    stmt.setString(9, city);
-	    stmt.setString(10, state);
-	    stmt.setString(11, zip);
-	    stmt.setString(12, hmPhone);
-	    stmt.setString(13, mobile);
-	    stmt.setString(14, wkPhone);
-	    stmt.setString(15, ssn);
-	    stmt.setInt(16, gender);
-	    stmt.setString(17, bday);
-	    stmt.setInt(18, employee);
-	    stmt.executeUpdate();
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
 
-    /*
-      Updates an already existing patient.
-    */
-    public void editPatient(int rcn, String last, String first, String middle, String salutation, String nickname, 
-			    String address, String address2, String city, String state, String zip, String hmPhone, 
-			    String mobile, String wkPhone, String ssn, int gender, String bday, int employee) {
-	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE patient SET LName=?, FName=?, MiddleI=?, Salutation=?, Preferred=?, Address=?, Address2=?, City=?, State=?, Zip=?, HmPhone=?, WirelessPhone=?, WkPhone=?, SSN=?, Gender=?, Birthdate=?, LastUpdatedBy=? WHERE RCN=?;");
-	    
-	    stmt.setString(1, last);
-	    stmt.setString(2, first);
-	    stmt.setString(3, middle);
-	    stmt.setString(4, salutation);
-	    stmt.setString(5, nickname);
-	    stmt.setString(6, address);
-	    stmt.setString(7, address2);
-	    stmt.setString(8, city);
-	    stmt.setString(9, state);
-	    stmt.setString(10, zip);
-	    stmt.setString(11, hmPhone);
-	    stmt.setString(12, mobile);
-	    stmt.setString(13, wkPhone);
-	    stmt.setString(14, ssn);
-	    stmt.setInt(15, gender);
-	    stmt.setString(16, bday);
-	    stmt.setInt(17, employee);
-	    stmt.setInt(18, rcn);
-	    stmt.executeUpdate();
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
-
-    /*
-      Adds new guarantor who is not already a patient.
-    */
-    public void addNewGuarantor(String last, String first, String address, String city, 
-				String state, String zip, String hmPhone, 
-				String ssn, int gender, String bday, int employee) {
-	if (patientAlreadyExists(ssn)) {
-	    int gPatNum = getPatNumOfRecordWithSSN(ssn);
-	    editGuarantor(gPatNum, last, first, address, city, state, zip, hmPhone, ssn, gender, bday, employee);
-	}
-	else {
-	    try {
-		PreparedStatement stmt = null;
-		//if a new patient, insert new patient
-		stmt = getConnection().prepareStatement("INSERT INTO patient (LName, FName, Address, City, State, Zip, HmPhone, SSN, Gender, Birthdate, LastUpdatedBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-		stmt.setString(1, last);
-		stmt.setString(2, first);
-		stmt.setString(3, address);
-		stmt.setString(4, city);
-		stmt.setString(5, state);
-		stmt.setString(6, zip);
-		stmt.setString(7, hmPhone);
-		stmt.setString(8, ssn);
-		stmt.setInt(9, gender);
-		stmt.setString(10, bday);
-		stmt.setInt(11, employee);
-		stmt.executeUpdate();
+	    if (rs.next()) {
+		return rs.getInt(1);
 	    }
-	    catch (Exception e) {
-		e.printStackTrace();
+	    else {
+		throw new UnknownSSNException("no person with ssn "+ssn+" found");
 	    }
 	}
-    }
-    
-    public void setGuarantor(int gPatNum, int ptRCN, int employee) {
-	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE patient SET guarantor=?, lastupdatedby=? WHERE RCN=?;");
-	    stmt.setInt(1, gPatNum);
-	    stmt.setInt(2, employee);
-	    stmt.setInt(3, ptRCN);
-	    stmt.executeUpdate();
-	    System.out.println("Patient with RCN:" + ptRCN + " now has guarantor with patnum:" + gPatNum);
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
+	catch (SQLException e) {
+	    throw new Exception("failed on getting patnum with ssn", e);
 	}
     }
 
-    /*
-      Updates a guarantors information.
-    */
-    public void editGuarantor(int gPatNum, String last, String first, String address, 
-			      String city, String state, String zip, String hmPhone, 
-			      String ssn, int gender, String bday, int employee) {
+    protected void validateSSN(String ssn) throws InvalidSSNException, DuplicateSSNException {
+	if (ssn == null) {
+	    throw new InvalidSSNException("ssn cannot be null");
+	}
+	if (!ssn.matches("\\d{9}") && //actual ssn
+	    !ssn.matches(JDentProExecutioner.AUTOGEN_SSN_PATTERN)) { //auto generated unique
+	    throw new InvalidSSNException("ssn is invalid");
+	}
 	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE patient SET LName=?, FName=?, Address=?, City=?, State=?, Zip=?, HmPhone=?, SSN=?, Gender=?, Birthdate=?, LastUpdatedBy=? WHERE PatNum=?;");
-	    stmt.setString(1, last);
-	    stmt.setString(2, first);
-	    stmt.setString(3, address);
-	    stmt.setString(4, city);
-	    stmt.setString(5, state);
-	    stmt.setString(6, zip);
-	    stmt.setString(7, hmPhone);
-	    stmt.setString(8, ssn);
-	    stmt.setInt(9, gender);
-	    stmt.setString(10, bday);
-	    stmt.setInt(11, employee);
-	    stmt.setInt(12, gPatNum);
-	    stmt.executeUpdate();
-	    System.out.println("");
+	    //make sure ssn does not already exist
+	    int internalID = getPatNumOfRecordWithSSN(ssn);
+	    throw new DuplicateSSNException("person with ssn already exists in database");
+	}
+	catch (UnknownSSNException e) {
+	    //do nothing
 	}
 	catch (Exception e) {
-	    e.printStackTrace();
+	    //do nothing
 	}
     }
+
+
+
 
     /*
       Updates a guarantor's RCN, so that he/she is a patient.
@@ -396,6 +251,7 @@ public abstract class AbstractRecordManager implements RecordManager {
       Returns true if patient with given SSN already exists in the database.
     */
     public boolean patientAlreadyExists(String ssn) {
+	/*
 	try {
 	    PreparedStatement stmt = getConnection().prepareStatement("SELECT PatNum FROM patient WHERE SSN=?");
 	    stmt.setString(1, ssn);
@@ -406,140 +262,76 @@ public abstract class AbstractRecordManager implements RecordManager {
 	    e.printStackTrace();
 	}
 	return false;
+	*/
+	try {
+	    getPatNumOfRecordWithSSN(ssn);
+	    return true;
+	}
+	catch (Exception e) {
+	    return false;
+	}
     }
 
-    /*
-      Returns true if a Recall already exists with patnum.
-    */
-    public boolean recallAlreadyExists(int patnum) {
-	try {
-	    PreparedStatement stmt= getConnection().prepareStatement("SELECT RecallNum FROM recall WHERE PatNum=?");
-	    stmt.setInt(1, patnum);
-	    ResultSet rs = stmt.executeQuery();
-	    return rs.next();
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return false;
-    }
-    
-    /*
-      Returns recall with patnum.
-    */
-    public ResultSet getRecallWithPatNum(int patnum) {
-	try {
-	    //need to add recall type and last visit.
-	    PreparedStatement stmt = getConnection().prepareStatement("SELECT DatePrevious, DateDueCalc, RecallInterval, RecallType, IsDisabled FROM recall WHERE PatNum=?");
-	    stmt.setInt(1, patnum);
-	    return stmt.executeQuery();
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return null;
-    }
 
     /*
       Adds a recall to patient with patnum.
     */
-    public void addRecall(int patnum, String recallType, String nextRecall, String lastRecall, int interval) {
+    public void addRecall(int patnum, String recallType, String nextRecall, String lastRecall, int interval, boolean disabled) throws Exception {
 	//note: add recall type and last visit later.
 	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("INSERT INTO recall (PatNum, RecallType, DateDue, DatePrevious, RecallInterval) VALUES (?, ?, ?, ?, ?)");
+	    PreparedStatement stmt = getConnection().prepareStatement("INSERT INTO recall (PatNum, RecallType, DateDueCalc, DatePrevious, RecallInterval, IsDisabled) VALUES (?, ?, ?, ?, ?, ?)");
 	    stmt.setInt(1, patnum);
 	    stmt.setString(2, recallType);
 	    stmt.setString(3, nextRecall);
 	    stmt.setString(4, lastRecall);
 	    stmt.setInt(5, interval);
+
+	    int disabledInt = 0;
+	    if (disabled) {
+		disabledInt = 1;
+	    }
+	    stmt.setInt(6, disabledInt);
+
 	    stmt.executeUpdate();
-	    calculateRecallDate(patnum, lastRecall, interval);
+	    //calculateRecallDate(patnum, lastRecall, interval);
 	}
 	catch (Exception e) {
 	    e.printStackTrace();
+	    Exception newE = new Exception("failed on adding new recall to patient "+patnum+" with recallType "+recallType, e);
+	    throw newE;
 	}
     }
 
     /*
       Edits recall of patient with patnum.
     */
-    public void editRecall(int patnum, String recallType, String nextRecall, String lastRecall, int interval) {
+    public void editRecall(int patnum, String recallType, String nextRecall, String lastRecall, int interval, boolean disabled) throws Exception {
 	//add recall type and last visit later.
+
 	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE recall SET RecallType=?, DateDue=?, DatePrevious=?, RecallInterval=? WHERE PatNum=?");
-	    stmt.setString(1, recallType);
-	    stmt.setString(2, nextRecall);
-	    stmt.setString(3, lastRecall);
-	    stmt.setInt(4, interval);
+	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE recall SET DateDueCalc=?, DatePrevious=?, RecallInterval=?, IsDisabled=? WHERE PatNum=? AND RecallType=?");
+	    stmt.setString(1, nextRecall);
+	    stmt.setString(2, lastRecall);
+	    stmt.setInt(3, interval);
 	    stmt.setInt(5, patnum);
+	    stmt.setString(6, recallType);
+
+	    int disabledInt = 0;
+	    if (disabled) {
+		disabledInt = 1;
+	    }
+	    stmt.setInt(4, disabledInt);
+
 	    stmt.executeUpdate();
-	    calculateRecallDate(patnum, lastRecall, interval);
+	    //calculateRecallDate(patnum, lastRecall, interval);
 	}
 	catch (Exception e) {
 	    e.printStackTrace();
+	    Exception newE = new Exception("failed on editing recall", e);
+	    throw newE;
 	}
     }
 
-    /*
-      Calculates next recall date.
-    */
-    public void calculateRecallDate(int patnum, String lastRecall, int interval) {
-	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE recall SET dateduecalc=(SELECT ADDDATE(?, ?)) WHERE patnum=?");
-	    stmt.setString(1, lastRecall);
-	    stmt.setInt(2, interval);
-	    stmt.setInt(3, patnum);
-	    stmt.executeUpdate();
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
-
-    /*
-      Activates a new patient recall.
-    */
-    public void activateNewPatientRecall(int patnum) {
-	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("INSERT INTO recall (PatNum, IsDisabled) VALUES (?, ?)");
-	    stmt.setInt(1, patnum);
-	    stmt.setInt(2, 0);
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
-
-    /*
-      Activates an existing patient recall.
-    */
-    public void activateExistingPatientRecall(int patnum) {
-	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE recall SET IsDisabled=? WHERE PatNum=?");
-	    stmt.setInt(1, 0);
-	    stmt.setInt(2, patnum);
-	    stmt.executeUpdate();
-	}
-	catch (Exception e) {
-
-	}
-    }
-
-    /*
-      Deactivates a patient.
-    */
-    public void deactivatePatientRecall(int patnum) {
-	try {
-	    PreparedStatement stmt = getConnection().prepareStatement("UPDATE recall SET IsDisabled=? WHERE PatNum=?");
-	    stmt.setInt(1, 1);
-	    stmt.setInt(2, patnum);
-	    stmt.executeUpdate();
-	    System.out.println("deactivate patient recalled in recordmanager..");
-	}
-	catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
 
     /*
       Returns records of patients who have recall within given dates.
@@ -575,4 +367,97 @@ public abstract class AbstractRecordManager implements RecordManager {
 	return null;
     }
 
+
+
+
+
+    /**
+     * @returns patient record with given rcn.
+     */
+    public ResultSet getPreviewRecordHavingRCN(int rcn) {
+	ResultSet resultSet = null;
+	try {
+	    PreparedStatement stmt = 
+		getConnection().prepareStatement("SELECT LName, FName, Address, HmPhone, rcn FROM patient WHERE rcn=?");
+	    stmt.setInt(1, rcn);
+	    resultSet = stmt.executeQuery();
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return resultSet;
+    }
+
+    protected abstract String getQueryForRecordsHavingLastName();
+
+    public ResultSet getRecordsWithLastName(String last) {
+	ResultSet resultSet = null;
+	try {
+	    PreparedStatement stmt = 
+		//getConnection().prepareStatement("SELECT LName, FName, Address, HmPhone, rcn FROM patient WHERE LName=? ORDER BY FNAME"); 
+		getConnection().prepareStatement(getQueryForRecordsHavingLastName());
+	    stmt.setString(1, last);
+	    resultSet = stmt.executeQuery();
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return resultSet;
+    }
+
+    protected abstract String getQueryForRecordsHavingFirstName();
+
+   public ResultSet getRecordsWithFirstName(String first) {
+	ResultSet resultSet = null;
+	try {
+	    PreparedStatement stmt = 
+		//getConnection().prepareStatement("SELECT LName, FName, Address, HmPhone, rcn FROM patient WHERE FName=? ORDER BY LNAME");
+		getConnection().prepareStatement(getQueryForRecordsHavingFirstName());
+	    stmt.setString(1, first);
+	    resultSet = stmt.executeQuery();
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return resultSet;
+    }
+
+    protected abstract String getQueryForRecordsHavingSSN();
+
+    public ResultSet getRecordWithSSN(String ssn) {
+	ResultSet resultSet = null;
+	try {
+	    //String temp = ssn.replaceAll("\\D", "");
+
+	    PreparedStatement stmt = 
+		//getConnection().prepareStatement("SELECT lname, fname, address, hmphone, rcn FROM patient WHERE ssn=?");
+		getConnection().prepareStatement(getQueryForRecordsHavingSSN());
+	    stmt.setString(1, ssn);
+	    resultSet = stmt.executeQuery();
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return resultSet;
+    }
+
+    protected abstract String getQueryForRecordsHavingPhoneNumber();
+
+    public ResultSet getRecordsWithPhoneNum(String phone) {
+	ResultSet resultSet = null;
+	try {
+	    String temp = phone.replaceAll("\\D", "");
+	    
+	    PreparedStatement stmt = 
+		//getConnection().prepareStatement("SELECT lname, fname, address, hmphone, rcn FROM patient WHERE hmphone=?");
+		getConnection().prepareStatement(getQueryForRecordsHavingPhoneNumber());
+	    stmt.setString(1, temp);
+	    resultSet = stmt.executeQuery();
+	}
+	catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return resultSet;
+    }
+   
 }

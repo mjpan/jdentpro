@@ -8,43 +8,136 @@
  <label Font="Helvetica 36" Foreground="blue" text="Recall"/>
 </panel>
 
-<label LabelFor="recallType" font="Helvetica" foreground="blue" text="Type">
+<label LabelFor="recallTypeComboBox1" font="Helvetica" foreground="blue" text="Type">
  <gridbagconstraints id="gbc1" gridx="0" gridy="2" weightx="1" weighty="1" anchor="GridBagConstraints.LINE_END"/>
 </label>
-<combobox id="recallType" PreferredSize="228,22">
+<combobox id="recallTypeComboBox1" PreferredSize="200,22">
  <gridbagconstraints id="gbc2" gridx="1" gridy="2" weightx="1" weighty="1" anchor="GridBagConstraints.LINE_START"/>
-</combobox> 
+</combobox>
+ 
+<label LabelFor="recallTypeComboBox2" font="Helvetica" foreground="blue" text="Type">
+ <gridbagconstraints use="gbc1" gridx="2" gridy="2"/>
+</label>
+<combobox id="recallTypeComboBox2" PreferredSize="200,22">
+ <gridbagconstraints use="gbc2" gridx="3" gridy="2"/>
+</combobox>
 
-<label LabelFor="nextRecall" font="Helvetica" foreground="blue" text="Next Recall Date">
+<label LabelFor="recallTypeComboBox3" font="Helvetica" foreground="blue" text="Type">
+ <gridbagconstraints use="gbc1" gridx="4" gridy="2"/>
+</label>
+<combobox id="recallTypeComboBox3" PreferredSize="200,22">
+ <gridbagconstraints use="gbc2" gridx="5" gridy="2"/>
+</combobox>
+
+<label LabelFor="nextRecall1" font="Helvetica" foreground="blue" text="Next Recall">
  <gridbagconstraints use="gbc1" gridx="0" gridy="3"/>
 </label>
-<panel id="nextRecall">
+<panel id="nextRecall1">
  <gridbagconstraints use="gbc2" gridx="1" gridy="3"/>
- <combobox id="Rmonth" editable="false" PreferredSize="72,22"/>
- <combobox id="Rday" editable="false" PreferredSize="60,22"/>
- <combobox id="Ryear" editable="false" PreferredSize="80,22"/>
+ <combobox id="Rmonth1" editable="false" PreferredSize="50,22"/>
+ <combobox id="Rday1" editable="false" PreferredSize="50,22"/>
+ <combobox id="Ryear1" editable="false" PreferredSize="80,22"/>
 </panel>
 
-<label LabelFor="lastRecall" font="Helvetica" foreground="blue" text="Last Recall Date">
+<label LabelFor="nextRecall2" font="Helvetica" foreground="blue" text="Next Recall">
+ <gridbagconstraints use="gbc1" gridx="2" gridy="3"/>
+</label>
+<panel id="nextRecall2">
+ <gridbagconstraints use="gbc2" gridx="3" gridy="3"/>
+ <combobox id="Rmonth2" editable="false" PreferredSize="50,22"/>
+ <combobox id="Rday2" editable="false" PreferredSize="50,22"/>
+ <combobox id="Ryear2" editable="false" PreferredSize="80,22"/>
+</panel>
+
+<label LabelFor="nextRecall3" font="Helvetica" foreground="blue" text="Next Recall">
+ <gridbagconstraints use="gbc1" gridx="4" gridy="3"/>
+</label>
+<panel id="nextRecall3">
+ <gridbagconstraints use="gbc2" gridx="5" gridy="3"/>
+ <combobox id="Rmonth3" editable="false" PreferredSize="50,22"/>
+ <combobox id="Rday3" editable="false" PreferredSize="50,22"/>
+ <combobox id="Ryear3" editable="false" PreferredSize="80,22"/>
+</panel>
+
+<label LabelFor="lastRecall1" font="Helvetica" foreground="blue" text="Last Recall">
  <gridbagconstraints use="gbc1" gridx="0" gridy="4"/>
 </label>
-<panel id="lastRecall">
+<panel id="lastRecall1">
  <gridbagconstraints use="gbc2" gridx="1" gridy="4"/>
- <combobox id="LRmonth" editable="false" PreferredSize="72,22"/>
- <combobox id="LRday" editable="false" PreferredSize="60,22"/>
- <combobox id="LRyear" editable="false" PreferredSize="80,22"/>
+ <combobox id="LRmonth1" editable="false" PreferredSize="50,22"/>
+ <combobox id="LRday1" editable="false" PreferredSize="50,22"/>
+ <combobox id="LRyear1" editable="false" PreferredSize="80,22"/>
 </panel>
 
+<label LabelFor="lastRecall2" font="Helvetica" foreground="blue" text="Last Recall">
+ <gridbagconstraints use="gbc1" gridx="2" gridy="4"/>
+</label>
+<panel id="lastRecall2">
+ <gridbagconstraints use="gbc2" gridx="3" gridy="4"/>
+ <combobox id="LRmonth2" editable="false" PreferredSize="50,22"/>
+ <combobox id="LRday2" editable="false" PreferredSize="50,22"/>
+ <combobox id="LRyear2" editable="false" PreferredSize="80,22"/>
+</panel>
 
-<label LabelFor="recallInterval" font="Helvetica" foreground="blue" text="Interval"> 
+<label LabelFor="lastRecall3" font="Helvetica" foreground="blue" text="Last Recall">
+ <gridbagconstraints use="gbc1" gridx="4" gridy="4"/>
+</label>
+<panel id="lastRecall3">
+ <gridbagconstraints use="gbc2" gridx="5" gridy="4"/>
+ <combobox id="LRmonth3" editable="false" PreferredSize="50,22"/>
+ <combobox id="LRday3" editable="false" PreferredSize="50,22"/>
+ <combobox id="LRyear3" editable="false" PreferredSize="80,22"/>
+</panel>
+
+<label LabelFor="recallInterval1" font="Helvetica" foreground="blue" text="Interval"> 
  <gridbagconstraints use="gbc1" gridx="0" gridy="5"/>
 </label>
-<combobox id="recallInterval" PreferredSize="228,22">
+<combobox id="recallInterval1" PreferredSize="200,22">
  <gridbagconstraints use="gbc2" gridx="1" gridy="5"/>
 </combobox> 
 
+<label LabelFor="recallInterval2" font="Helvetica" foreground="blue" text="Interval"> 
+ <gridbagconstraints use="gbc1" gridx="2" gridy="5"/>
+</label>
+<combobox id="recallInterval2" PreferredSize="200,22">
+ <gridbagconstraints use="gbc2" gridx="3" gridy="5"/>
+</combobox> 
+
+<label LabelFor="recallInterval3" font="Helvetica" foreground="blue" text="Interval"> 
+ <gridbagconstraints use="gbc1" gridx="4" gridy="5"/>
+</label>
+<combobox id="recallInterval3" PreferredSize="200,22">
+ <gridbagconstraints use="gbc2" gridx="5" gridy="5"/>
+</combobox> 
+
+
+
+<label LabelFor="recallActive1" font="Helvetica" foreground="blue" text="Active"> 
+ <gridbagconstraints use="gbc1" gridx="0" gridy="6"/>
+</label>
+<checkbox id="recallActive1" PreferredSize="200,22">
+ <gridbagconstraints use="gbc2" gridx="1" gridy="6"/>
+</checkbox> 
+
+<label LabelFor="recallActive2" font="Helvetica" foreground="blue" text="Active"> 
+ <gridbagconstraints use="gbc1" gridx="2" gridy="6"/>
+</label>
+<checkbox id="recallActive2" PreferredSize="200,22">
+ <gridbagconstraints use="gbc2" gridx="3" gridy="6"/>
+</checkbox> 
+
+<label LabelFor="recallActive3" font="Helvetica" foreground="blue" text="Active"> 
+ <gridbagconstraints use="gbc1" gridx="4" gridy="6"/>
+</label>
+<checkbox id="recallActive3" PreferredSize="200,22">
+ <gridbagconstraints use="gbc2" gridx="5" gridy="6"/>
+</checkbox> 
+
+
+
+
 <panel>
-<gridbagconstraints use="gbc2" gridx="1" gridy="6"/>
+<gridbagconstraints use="gbc2" gridx="1" gridy="7"/>
  <button id="save" Text="SAVE" ActionCommand="AC_SAVE"/>
  <button id="cancel" Text="CANCEL" ActionCommand="AC_CANCEL"/>
 </panel>

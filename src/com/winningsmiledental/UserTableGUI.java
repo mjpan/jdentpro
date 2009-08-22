@@ -43,6 +43,10 @@ public class UserTableGUI extends AbstractGUI {
 	return table;
     }
 
+    public UserTableModel getModel() {
+	return model;
+    }
+
     public UserAccountManager getUserAccountManager() {
 	return accountManager;
     }
@@ -114,6 +118,12 @@ public class UserTableGUI extends AbstractGUI {
 	    rowData.add(accessLevel);
 	    addRow(rowData);
 	}
+
+	public void removeRow(int row) {
+	    super.removeRow(row);
+	}
+
+
     }
     
 }

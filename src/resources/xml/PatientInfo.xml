@@ -5,12 +5,18 @@
 <button id="cancel" Text="Cancel" ActionCommand="AC_CANCEL"/>
 <button id="newPatient" Text="New" ActionCommand="AC_NEW"/>
 <button id="editPatient" Text="Edit" ActionCommand="AC_EDIT"/>
+
+<label LabelFor="searchParameterValue" Text="Search for patient having "/>
+<textfield id="searchParameterValue" Columns="20" Text=""/>
+<combobox id="searchParameter" />
 <button id="seek" Text="Seek" ActionCommand="AC_SEEK"/>
+<!--
 <button id="rcn" Text="RCN" ActionCommand="AC_RCN"/>
 <button id="last" Text="Last" ActionCommand="AC_LAST"/>
 <button id="guarNum" Text="Guar#" ActionCommand="AC_GUARNUM"/>
 <button id="phoneNum" Text="Phone" ActionCommand="AC_PHONE"/>
 <button id="ssn" Text="SSN" ActionCommand="AC_SSN"/>
+-->
 </panel>
 
 

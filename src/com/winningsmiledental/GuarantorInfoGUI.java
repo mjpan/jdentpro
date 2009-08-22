@@ -13,9 +13,15 @@ import java.sql.*;
 
 public class GuarantorInfoGUI extends AbstractGUI {
 
+    //public static String SEARCHFIELD_RCN = "RCN";
+    public static String SEARCHFIELD_LASTNAME = "Last Name";
+    public static String SEARCHFIELD_FIRSTNAME = "First Name";
+    public static String SEARCHFIELD_SSN = "SSN";
+    public static String SEARCHFIELD_PHONE = "Phone";
+
     public JPanel panel, buttons;
-    public JButton cancel, newGuarantor, editGuarantor, seek, 
-        rcn, last, guarNum, phoneNum, ssn;
+    public JButton cancel, newGuarantor, editGuarantor, seek; 
+    //rcn, last, guarNum, phoneNum, ssn;
     public JTable table;
     public RecordTableModel model;
     public JScrollPane scrollPane;
@@ -24,8 +30,27 @@ public class GuarantorInfoGUI extends AbstractGUI {
     private RecordManager rManager;
     private int ptRCN;
 
+    public JTextField searchParameterValue;
+    public JComboBox searchParameter;
+
     public GuarantorInfoGUI(ApplicationFrame af, int rcn) {
 	super(af);
+	setPatientRCN(rcn);
+	setSearchParameters();
+    }
+
+    protected void setSearchParameters() {
+	//searchParmeter.addItem(SEARCHFIELD_RCN);
+	searchParameter.addItem(SEARCHFIELD_LASTNAME);
+	searchParameter.addItem(SEARCHFIELD_FIRSTNAME);
+	searchParameter.addItem(SEARCHFIELD_SSN);
+	searchParameter.addItem(SEARCHFIELD_PHONE);
+    }
+
+    /**
+     * sets the active patient RCN
+     */
+    protected void setPatientRCN(int rcn) {
 	ptRCN = rcn;
     }
 
@@ -33,17 +58,24 @@ public class GuarantorInfoGUI extends AbstractGUI {
 	return "/xml/GuarantorInfo.xml";
     }
 
+    protected RecordTableModel getModel() {
+	return model;
+    }
+
+    protected void refresh() {
+	refreshTable();
+    }
 
     protected void connectActionListeners() {
 	actionableItems.add(cancel);
 	actionableItems.add(newGuarantor);
 	actionableItems.add(editGuarantor);
 	actionableItems.add(seek);
-	actionableItems.add(rcn);
-	actionableItems.add(last);
-	actionableItems.add(guarNum);
-	actionableItems.add(phoneNum);
-	actionableItems.add(ssn);
+	//actionableItems.add(rcn);
+	//actionableItems.add(last);
+	//actionableItems.add(guarNum);
+	//actionableItems.add(phoneNum);
+	//actionableItems.add(ssn);
 	GuarantorInfoListener listener = new GuarantorInfoListener(this);
     }
 
@@ -52,12 +84,14 @@ public class GuarantorInfoGUI extends AbstractGUI {
     }
 
     public RecordManager getRecordManager() {
-	return rManager;
+	return getExecutioner().getGuarantorRecordManager();
     }
 
+    /*
     public void setRecordManager() {
 	rManager = new GuarantorRecordManager(getExecutioner().getDatabase());
     }
+    */
 
     public int getPatientRCN() {
 	return ptRCN;
@@ -67,66 +101,94 @@ public class GuarantorInfoGUI extends AbstractGUI {
     protected void setupGUI() throws Exception {
 	super.setupGUI();
 	
-	setRecordManager();
+	//setRecordManager();
 
-	model = new RecordTableModel(getRecordManager());
-	
-	TableSorter ts = new TableSorter(model);
-	table = new JTable(ts);
-	ts.setTableHeader(table.getTableHeader());
+	//model = new RecordTableModel(getRecordManager());
+	model = new GuarantorRecordTableModel();
+	model.setResultSet(getRecordManager().getAllGuarantorRecords());
+
+	displayTable();
 
 	scrollPane = new JScrollPane(table);
 	splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, buttons, scrollPane);
 	panel.add(splitPane, BorderLayout.CENTER);
-	
     }
 
-    protected class RecordTableModel extends JDentProTableModel {
-	
-	private RecordManager rManager;
-	
-	public String COLUMN_NAME = "Name";
-	public String COLUMN_ADDRESS = "Address";
-	public String COLUMN_PHONENUM = "Phone Number";
-	public String COLUMN_PATNUM = "PatNum";
 
-	private String[] columnNames = { COLUMN_NAME, COLUMN_ADDRESS, COLUMN_PHONENUM, COLUMN_PATNUM };
+    protected void displayTable() {	
+	TableSorter ts = new TableSorter(getModel());
+	table = new JTable(ts);
+	ts.setTableHeader(table.getTableHeader());
+    }
 
-	public RecordTableModel(RecordManager rm) {
-	    super();
-	    for (int i = 0; i < columnNames.length; i++) {
-		addColumn(columnNames[i]);
-	    }
-	    rManager = rm;
-	    populate();
+    protected void refreshTable() {
+	/*
+	searchParameter.addItem("RCN");
+	searchParameter.addItem("Last Name");
+	searchParameter.addItem("Phone Number");
+	searchParameter.addItem("SSN");
+	 */
+	String searchField = (String) searchParameter.getSelectedItem();
+	String searchValue = searchParameterValue.getText();
+	searchParameterValue.setText("");
+
+	ResultSet resultSet = null;
+
+	if (searchValue.length() == 0) {
+	    resultSet = 
+		//getRecordManager().getAllPatientRecords();
+		getRecordManager().getAllGuarantorRecords();
 	}
-
-	protected void populate() {
-	    ResultSet rs = rManager.getAllGuarantorRecords();
+	/*
+	else if (searchField.equals(SEARCHFIELD_RCN)) {
 	    try {
-		while (rs.next()) {
-		    String name = rs.getString(1) + ", " + rs.getString(2);
-		    String address = rs.getString(3);
-		    String phone = rs.getString(4);
-		    int patnum = rs.getInt(5);
-		    addRow(name, address, phone, patnum);
-		}
+		int rcn = Integer.parseInt(searchValue);
+		resultSet = getRecordManager().getPreviewRecordHavingRCN(rcn);
 	    }
 	    catch (Exception e) {
-
+		e.printStackTrace();
 	    }
 	}
-	
-	protected void addRow(String name, String address, String phone, int patnum) {
-	    Vector rowData = new Vector();
+	*/
+	else if (searchField.equals(SEARCHFIELD_LASTNAME)) {
+	    try {
+		resultSet = getRecordManager().getRecordsWithLastName(searchValue);
+	    }
+	    catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
+	else if (searchField.equals(SEARCHFIELD_FIRSTNAME)) {
+	    try {
+		resultSet = getRecordManager().getRecordsWithFirstName(searchValue);
+	    }
+	    catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
+	else if (searchField.equals(SEARCHFIELD_SSN)) {
+	    try {
+		resultSet = getRecordManager().getRecordWithSSN(searchValue);
+	    }
+	    catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
+	else if (searchField.equals(SEARCHFIELD_PHONE)) {
+	    try {
+		resultSet = getRecordManager().getRecordsWithPhoneNum(searchValue);
+	    }
+	    catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
 
-	    rowData.add(name);
-	    rowData.add(address);
-	    rowData.add(phone);
-	    rowData.add(new Integer(patnum));
-
-	    addRow(rowData);
+	if (resultSet != null) {
+	    getModel().setResultSet(resultSet);
+	    table.repaint();
 	}
     }
-    
+
+
+
 }
