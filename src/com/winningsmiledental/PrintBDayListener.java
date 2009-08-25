@@ -74,6 +74,8 @@ public class PrintBDayListener extends AbstractListener {
 		    String month = temp.getMonth();
 		    ResultSet rs = 
 			getExecutioner().getPatientRecordManager().getRecordsWithBirthdateInMonth(month);
+
+		    int recordsProcessed = 0;
 		    while (rs.next()) {
 			String rcn = rs.getString(1) + "\n\n" + rs.getInt(13);
 			String lname = rs.getString(2);
@@ -100,9 +102,17 @@ public class PrintBDayListener extends AbstractListener {
 			pdfListWkPhone.add(wkPhone);
 			pdfListMobile.add(mobile);
 			pdfListBirthdate.add(birthdate);
+
+			recordsProcessed ++;
 		    }
 		    int missing = temp.getNumOfMissingLabels();
-		    new PDFLabels(pdfLabels.toArray(), "BirthdayLabels.pdf", filePath, missing);
+
+		    int labelsAppend = 0;
+		    if (recordsProcessed < 3) {
+			labelsAppend = (3-recordsProcessed);
+		    }
+
+		    new PDFLabels(pdfLabels.toArray(), "BirthdayLabels.pdf", filePath, missing, labelsAppend);
 		    new BirthdayList(filePath, pdfListRCN.toArray(), pdfListName.toArray(),
 				     pdfListHmPhone.toArray(), pdfListWkPhone.toArray(),
 				     pdfListMobile.toArray(), pdfListBirthdate.toArray(), month);
