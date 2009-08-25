@@ -8,6 +8,9 @@ import javax.swing.tree.*;
 import org.swixml.*;
 import org.swixml.SwingEngine;
 
+import java.util.Calendar;
+
+
 public class PrintBDayGUI extends AbstractGUI {
 
     public XGridBagConstraints gbc, gbc1, gbc2;
@@ -15,11 +18,9 @@ public class PrintBDayGUI extends AbstractGUI {
     public JComboBox month, missing;
     public JButton create, cancel, choose;
     public JTextField filePath;
-    //public RecordManager manager;
 
     public PrintBDayGUI(ApplicationFrame af) {
 	super(af);
-	//manager = new PatientRecordManager();
 	loadComboBoxes();
     }
 
@@ -44,6 +45,14 @@ public class PrintBDayGUI extends AbstractGUI {
 	month.addItem("December");
 	for (int i = 0; i < 30; i++) {
 	    missing.addItem(new Integer(i));
+	}
+
+	Calendar cal = Calendar.getInstance();
+	int currentMonth = cal.get(Calendar.MONTH) + 1;
+	month.setSelectedIndex(currentMonth);
+
+	if (JDentPro.staticRunningOnMacOSX()) {
+	    filePath.setText(System.getProperty("user.dir"));
 	}
     }
 

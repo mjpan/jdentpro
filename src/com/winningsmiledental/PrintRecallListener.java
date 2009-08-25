@@ -121,15 +121,11 @@ public class PrintRecallListener extends AbstractListener {
 		    }
 
 		    int missing = temp.getNumOfMissingLabels();
-		    int labelsAppend = 0;
-		    if (recordsProcessed < 3) {
-			labelsAppend += (3-recordsProcessed);
-		    }
 
 		    try {
 			//create labels
 			new PDFLabels(pdfLabels.toArray(), 
-				      "RecallLabels.pdf", filePath, missing, labelsAppend);
+				      "RecallLabels.pdf", filePath, missing);
 			//create list
 			new PDFList(filePath, pdfListRCN.toArray(), pdfListName.toArray(),
 				    pdfListHmPhone.toArray(), pdfListWkPhone.toArray(),
