@@ -67,7 +67,7 @@ public class PrintRecallGUI extends AbstractGUI {
 	Sday.setSelectedIndex(1);
 
 	if (JDentPro.staticRunningOnMacOSX()) {
-	    filePath.setText(System.getProperty("user.dir"));
+	    filePath.setText(System.getProperty("user.home")+"/Desktop");
 	}
     }
 
