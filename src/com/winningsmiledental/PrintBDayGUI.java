@@ -52,7 +52,7 @@ public class PrintBDayGUI extends AbstractGUI {
 	month.setSelectedIndex(currentMonth);
 
 	if (JDentPro.staticRunningOnMacOSX()) {
-	    filePath.setText(System.getProperty("user.dir"));
+	    filePath.setText(System.getProperty("user.home")+"/Desktop");
 	}
     }
 
