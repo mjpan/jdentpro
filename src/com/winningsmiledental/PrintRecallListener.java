@@ -70,6 +70,8 @@ public class PrintRecallListener extends AbstractListener {
 		    new ErrorMessage("Please Choose File to Save PDFs in.");
 		}
 		else {
+		    filePath = temp.getFilePath() + "/";
+
 		    resetArrays();
 		    String startDate = temp.getStartDate();
 		    String endDate = temp.getEndDate();
