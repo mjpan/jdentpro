@@ -15,7 +15,13 @@ public abstract class AbstractUserAccountManager implements UserAccountManager {
     }
 
     public void establishConnection() {
-	connection = JDentPro.getConnection(databaseName);
+	try {
+	    connection = JDentPro.getConnection(databaseName);
+	}
+	catch (Exception e) {
+	    // should log that we could not open a connection here
+	    e.printStackTrace();
+	}
     }
 
     public Connection getConnection() {

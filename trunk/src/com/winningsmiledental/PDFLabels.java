@@ -23,6 +23,7 @@ public class PDFLabels {
     private Document document;
     private Object[] data;
     private int labelsMissing;
+    private int labelsAppend;
     private String name;
     private String path;
 
@@ -31,17 +32,18 @@ public class PDFLabels {
     }
 
     public PDFLabels (Object[] data, String name, String path) {
-	this(data, name, path, 0);
+	this(data, name, path, 0, 0);
     }
 
     public PDFLabels(Object[] data, String name, int missing) {
-	this(data, name, "", missing);
+	this(data, name, "", missing, 0);
     }
 
-    public PDFLabels(Object[] data, String name, String path, int missing) {
+    public PDFLabels(Object[] data, String name, String path, int missingBefore, int missingAfter) {
 	this.data = data;
 	this.path = path + name;
-	labelsMissing = missing;
+	this.labelsMissing = missingBefore;
+	this.labelsAppend = missingAfter;
 	setUpDocument();
     }
 
@@ -59,11 +61,14 @@ public class PDFLabels {
 	    table.getDefaultCell().setBorderWidth(0f);
 	    table.getDefaultCell().setPaddingLeft(12f);
 	    table.getDefaultCell().setPaddingTop(12f);
-	    for (int i = 0; i < labelsMissing; i++ ) {
+	    for (int i = 0; i < this.labelsMissing; i++ ) {
 		table.addCell("");
 	    }
 	    for (int i = 0; i < data.length; i++) {
 		table.addCell(new Phrase((String)data[i], gry));
+	    }
+	    for (int i = 0; i < this.labelsAppend; i++ ) {
+		table.addCell("");
 	    }
 	    document.add(table);
 	}

@@ -8,7 +8,11 @@ import javax.swing.tree.*;
 import org.swixml.*;
 import org.swixml.SwingEngine;
 
+import java.util.Calendar;
+
 public class PrintRecallGUI extends AbstractGUI {
+
+    public static int YEAR_DEFAULT = 1999;
 
     public XGridBagConstraints gbc, gbc1, gbc2;
     public JPanel panel;
@@ -19,12 +23,10 @@ public class PrintRecallGUI extends AbstractGUI {
 
     public PrintRecallGUI(ApplicationFrame af) {
 	super(af);
-	//manager = new PatientRecordManager();
 	loadComboBoxes();
     }
 
     public RecordManager getRecordManager() {
-	//return manager;
 	return getExecutioner().getPatientRecordManager();
     }
 
@@ -44,13 +46,25 @@ public class PrintRecallGUI extends AbstractGUI {
 	    Eday.addItem(new Integer(i));
 	}
 	/* should be this year as the last idx */
-	for (int i = 2000; i <= 2020; i++) {
+	int startYear = 2000;
+	int numYears = 30;
+	for (int i = startYear; i <= startYear+numYears; i++) {
 	    Syear.addItem(new Integer(i));
 	    Eyear.addItem(new Integer(i));
 	}
 	for (int i = 0; i <= 30; i++) {
 	    missing.addItem(new Integer(i));
 	}
+
+	// now set the selected indices to to the current year and month
+	Calendar cal = Calendar.getInstance();
+	int currentYear = cal.get(Calendar.YEAR);
+	int currentMonth = cal.get(Calendar.MONTH) + 1;
+	Syear.setSelectedIndex(currentYear-YEAR_DEFAULT);
+	Eyear.setSelectedIndex(currentYear-YEAR_DEFAULT);
+	Smonth.setSelectedIndex(currentMonth);
+	Emonth.setSelectedIndex(currentMonth);
+	Sday.setSelectedIndex(1);
     }
 
     protected String getGUIxml() {
@@ -58,12 +72,12 @@ public class PrintRecallGUI extends AbstractGUI {
     }
 
     public String getStartDate() {
-	String yr = (Syear.getSelectedIndex()+1999)+"";
+	String yr = (Syear.getSelectedIndex()+YEAR_DEFAULT)+"";
 	String mo = Smonth.getSelectedIndex()+"";
 	String da = Sday.getSelectedIndex()+"";
 
 	String dateString = yr + "-" + mo + "-" + da;
-	if (dateString.equals("1999-0-0")) {
+	if (dateString.equals(YEAR_DEFAULT + "-0-0")) {
 	    dateString = "0001-1-1";
 	}
 
@@ -71,12 +85,12 @@ public class PrintRecallGUI extends AbstractGUI {
     }
 
    public String getEndDate() {
-	String yr = (Eyear.getSelectedIndex()+1999)+"";
+	String yr = (Eyear.getSelectedIndex()+YEAR_DEFAULT)+"";
 	String mo = Emonth.getSelectedIndex()+"";
 	String da = Eday.getSelectedIndex()+"";
 
 	String dateString = yr + "-" + mo + "-" + da;
-	if (dateString.equals("1999-0-0")) {
+	if (dateString.equals(YEAR_DEFAULT+"-0-0")) {
 	    dateString = "0001-1-1";
 	}
 
