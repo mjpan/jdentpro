@@ -62,7 +62,6 @@ public class PrintRecallListener extends AbstractListener {
 		file = fc.getSelectedFile();
 		filePath = file.getPath() + "/";
 		temp.setFilePath(filePath);
-		//dialog.dispose();
 	    } 
 	}
 	if (command.equals("AC_RECALL_CREATE")) {
@@ -74,8 +73,12 @@ public class PrintRecallListener extends AbstractListener {
 		    resetArrays();
 		    String startDate = temp.getStartDate();
 		    String endDate = temp.getEndDate();
-		    ResultSet rs = manager.getRecordsWithRecallBetweenDates(startDate, endDate);
+		    ResultSet rs = 
+			manager.getRecordsWithRecallBetweenDates(startDate, endDate);
+
+		    int recordsProcessed = 0;
 		    while (rs.next()) {
+
 			String rcn = rs.getString(1) + "\n\n" + rs.getInt(14);
 			String lname = rs.getString(2);
 			String fname = rs.getString(3);
@@ -104,16 +107,40 @@ public class PrintRecallListener extends AbstractListener {
 			pdfListMobile.add(mobile);
 			pdfListDateDue.add(dateDue);
 			pdfListRecallType.add(recallType);
+
+			recordsProcessed++;
+			
 		    }
+
+		    if (recordsProcessed == 0 ||
+			pdfLabels.isEmpty()) {
+			String errorMessage = 
+			    "No records found for the specified period " +
+			    startDate + " - " + endDate;
+			throw new NoRecordsRetrievedException(errorMessage);
+		    }
+
 		    int missing = temp.getNumOfMissingLabels();
-		    //create labels
-		    new PDFLabels(pdfLabels.toArray(), "RecallLabels.pdf", filePath, missing);
-		    //create list
-		    new PDFList(filePath, pdfListRCN.toArray(), pdfListName.toArray(),
-				pdfListHmPhone.toArray(), pdfListWkPhone.toArray(),
-				pdfListMobile.toArray(), pdfListDateDue.toArray(),
-				pdfListRecallType.toArray(), startDate, endDate);
-		    //open two pdf files.
+		    int labelsAppend = 0;
+		    if (recordsProcessed < 3) {
+			labelsAppend += (3-recordsProcessed);
+		    }
+
+		    try {
+			//create labels
+			new PDFLabels(pdfLabels.toArray(), 
+				      "RecallLabels.pdf", filePath, missing, labelsAppend);
+			//create list
+			new PDFList(filePath, pdfListRCN.toArray(), pdfListName.toArray(),
+				    pdfListHmPhone.toArray(), pdfListWkPhone.toArray(),
+				    pdfListMobile.toArray(), pdfListDateDue.toArray(),
+				    pdfListRecallType.toArray(), startDate, endDate);
+			//open two pdf files.
+		    }
+		    catch (Exception e) {
+			String errorMessage = "could not create PDF file >> " + e.getMessage();
+			throw new NoRecordsRetrievedException(errorMessage);
+		    }
 
 		    String os = System.getProperty("os.name");
 		    String[] commandArrayLabels;
@@ -126,9 +153,11 @@ public class PrintRecallListener extends AbstractListener {
 			commandArrayList =  new String[]{"open", list};
 		    }
 		    else {
-		    //operating system is windows
-			commandArrayLabels =  new String[]{"rundll32.exe", "url.dll,FileProtocolHandler", labels};
-			commandArrayList =  new String[]{"rundll32.exe", "url.dll,FileProtocolHandler", list};
+			//operating system is windows
+			commandArrayLabels =  
+			    new String[]{"rundll32.exe", "url.dll,FileProtocolHandler", labels};
+			commandArrayList =  
+			    new String[]{"rundll32.exe", "url.dll,FileProtocolHandler", list};
 		    }
 		    Runtime.getRuntime().exec(commandArrayLabels);
 		    Runtime.getRuntime().exec(commandArrayList);
@@ -137,10 +166,19 @@ public class PrintRecallListener extends AbstractListener {
 		    ((JDentProExecutioner)getExecutioner()).loadPrintOptions();
 		}
 	    }
+	    catch (NoRecordsRetrievedException e) {
+		// new ErrorMessage(e.getMessage());
+		
+		JOptionPane.showMessageDialog(getExecutioner().getAppFrame().getFrame(),
+					      e.getMessage(),
+					      "No recalls found",
+					      JOptionPane.ERROR_MESSAGE);
+
+		e.printStackTrace();
+	    }
 	    catch (Exception e) {
 		e.printStackTrace();
 	    }
-
 	}
     }
 
