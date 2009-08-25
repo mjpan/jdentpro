@@ -69,6 +69,8 @@ public class PrintBDayListener extends AbstractListener {
 		    new ErrorMessage("Please Choose File to Save PDFs in.");
 		}
 		else {
+		    filePath = temp.getFilePath() + "/";
+
 		    resetArrays();
 
 		    String month = temp.getMonth();
@@ -118,7 +120,7 @@ public class PrintBDayListener extends AbstractListener {
 		    String labels = filePath + "BirthdayLabels.pdf";
 		    String list = filePath + "BirthdayList.pdf";
 		    if (os.startsWith("Mac OS X")) {
-		    //operating system is tiger
+			//operating system is tiger
 			commandArrayLabels = new String[] {"open", labels};
 			commandArrayList =  new String[]{"open", list};
 		    }
