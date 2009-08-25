@@ -65,6 +65,10 @@ public class PrintRecallGUI extends AbstractGUI {
 	Smonth.setSelectedIndex(currentMonth);
 	Emonth.setSelectedIndex(currentMonth);
 	Sday.setSelectedIndex(1);
+
+	if (JDentPro.staticRunningOnMacOSX()) {
+	    filePath.setText(System.getProperty("user.dir"));
+	}
     }
 
     protected String getGUIxml() {

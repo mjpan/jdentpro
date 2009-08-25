@@ -107,12 +107,7 @@ public class PrintBDayListener extends AbstractListener {
 		    }
 		    int missing = temp.getNumOfMissingLabels();
 
-		    int labelsAppend = 0;
-		    if (recordsProcessed < 3) {
-			labelsAppend = (3-recordsProcessed);
-		    }
-
-		    new PDFLabels(pdfLabels.toArray(), "BirthdayLabels.pdf", filePath, missing, labelsAppend);
+		    new PDFLabels(pdfLabels.toArray(), "BirthdayLabels.pdf", filePath, missing);
 		    new BirthdayList(filePath, pdfListRCN.toArray(), pdfListName.toArray(),
 				     pdfListHmPhone.toArray(), pdfListWkPhone.toArray(),
 				     pdfListMobile.toArray(), pdfListBirthdate.toArray(), month);
